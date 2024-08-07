@@ -1,8 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    kotlin("kapt")
-    alias(libs.plugins.hilt)
 }
 
 android {
@@ -20,12 +18,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
-        buildConfigField(
-            "String",
-            "API_KEY",
-            "\"${project.findProperty("API_KEY")}\""
-        )
 
     }
 
@@ -47,7 +39,6 @@ android {
     }
     buildFeatures {
         compose = true
-        buildConfig = true
 
     }
     composeOptions {
@@ -77,14 +68,4 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
-
-
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter)
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.logger)
-
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
 }
