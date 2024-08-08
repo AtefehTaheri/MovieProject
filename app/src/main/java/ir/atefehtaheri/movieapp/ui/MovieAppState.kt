@@ -5,7 +5,6 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -14,27 +13,24 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import ir.atefehtaheri.movieapp.core.common.models.AppContentType
 import ir.atefehtaheri.movieapp.core.common.models.AppNavigationType
+import ir.atefehtaheri.movieapp.feature.homescreen.navigation.HomeScreenRoute
+import ir.atefehtaheri.movieapp.feature.homescreen.navigation.navigateToHomeScreen
+import ir.atefehtaheri.movieapp.feature.searchscreen.navigation.navigateToSearchScreen
 import ir.atefehtaheri.movieapp.navigation.TopLevelDestination
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+
 
 @Composable
 fun rememberMyAppState(
     windowSizeClass: WindowSizeClass,
-    coroutineScope: CoroutineScope = rememberCoroutineScope(),
     navController: NavHostController = rememberNavController(),
 
     ): MovieAppState {
     return remember(
         navController,
-        coroutineScope,
         windowSizeClass,
     ) {
         MovieAppState(
             navController,
-            coroutineScope,
             windowSizeClass
         )
     }
@@ -43,7 +39,6 @@ fun rememberMyAppState(
 @Stable
 class MovieAppState(
     val navController: NavHostController,
-    val coroutineScope: CoroutineScope,
     val windowSizeClass: WindowSizeClass,
 ) {
 
@@ -66,7 +61,7 @@ class MovieAppState(
             }
 
             WindowWidthSizeClass.Expanded -> {
-                navigationType =  AppNavigationType.PERMANENT_NAVIGATION_DRAWER
+                navigationType = AppNavigationType.PERMANENT_NAVIGATION_DRAWER
                 contentType = AppContentType.DUAL_PANE
             }
 
@@ -82,10 +77,32 @@ class MovieAppState(
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
 
-//    val currentTopLevelDestination: TopLevelDestination?
-//        @Composable get() = when (currentDestination?.route) {
-//        }
+    val currentTopLevelDestination: TopLevelDestination?
+        @Composable get() = when (currentDestination?.route) {
+            HomeScreenRoute -> TopLevelDestination.HOME
+            else -> null
+        }
 
     val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.values().asList()
 
+    fun navigateToTopLevelDestination(topLevelDestination: TopLevelDestination) {
+
+        val topLevelNavOptions = navOptions {
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+
+        when (topLevelDestination) {
+            TopLevelDestination.HOME -> {
+                navController.navigateToHomeScreen()
+            }
+            TopLevelDestination.SEARCH -> {
+                navController.navigateToSearchScreen()
+            }
+            TopLevelDestination.FAVORITE -> {}
+        }
+    }
 }

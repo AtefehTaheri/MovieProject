@@ -1,75 +1,96 @@
 package ir.atefehtaheri.movieapp.ui
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
+
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PermanentNavigationDrawer
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.omidtaheri.template.ui.MovieAppState
 import com.omidtaheri.template.ui.rememberMyAppState
 import ir.atefehtaheri.movieapp.core.common.models.AppNavigationType
+import ir.atefehtaheri.movieapp.navigation.MovieBottomBar
 import ir.atefehtaheri.movieapp.navigation.MovieNavHost
 
 @Composable
-fun MovieApp (
+fun MovieApp(
     windowSizeClass: WindowSizeClass,
     appState: MovieAppState = rememberMyAppState(
         windowSizeClass = windowSizeClass
     )
-){
+) {
 
     when (appState.navigationType) {
         AppNavigationType.BOTTOM_NAVIGATION -> {
+            MovieScaffold(
+                appState,
+                true,
+            )
         }
         AppNavigationType.NAVIGATION_RAIL -> {
         }
-        AppNavigationType.PERMANENT_NAVIGATION_DRAWER -> {
-            PermanentNavigationDrawer(drawerContent = {
 
-            }) {
-                MyAppContent(
-                    appState=appState,
-                    navigationType = appState.navigationType,
-                )
-            }
+        AppNavigationType.PERMANENT_NAVIGATION_DRAWER -> {
 
         }
     }
 
 
-
-
 }
 
 
-
 @Composable
-fun MyAppContent(
+private fun MovieScaffold(
     appState: MovieAppState,
-    modifier: Modifier = Modifier,
-    navigationType: AppNavigationType,
-){
-    Row(modifier = modifier.fillMaxSize()) {
-        AnimatedVisibility(visible = navigationType == AppNavigationType.NAVIGATION_RAIL) {
+    shouldShowBottomBar: Boolean,
+) {
 
-        }
+    Scaffold(
+        containerColor = Color.Transparent,
+        contentColor = MaterialTheme.colorScheme.onBackground,
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        bottomBar = {
+            if (shouldShowBottomBar) {
+                MovieBottomBar(
+                    navItems = appState.topLevelDestinations,
+                    onNavigateToDestination = appState::navigateToTopLevelDestination,
+                    currentDestination = appState.currentDestination,
+                )
+            }
+        },
+    ) { padding ->
+
         Column(
-            modifier = Modifier
+            Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.inverseOnSurface)
+                .padding(padding)
+                .consumeWindowInsets(padding)
+                .windowInsetsPadding(
+                    WindowInsets.safeDrawing.only(
+                        WindowInsetsSides.Horizontal,
+                    ),
+                )
         ) {
             MovieNavHost(
                 appState = appState
             )
-            AnimatedVisibility(visible = navigationType == AppNavigationType.BOTTOM_NAVIGATION) {
-            }
 
         }
     }
-
 }
+
+
+
+
+
