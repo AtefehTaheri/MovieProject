@@ -9,6 +9,8 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import ir.atefehtaheri.movieapp.core.designsystem.component.MovieNavigationBar
 import ir.atefehtaheri.movieapp.core.designsystem.component.MovieNavigationBarItem
+import ir.atefehtaheri.movieapp.core.designsystem.component.MovieNavigationRail
+import ir.atefehtaheri.movieapp.core.designsystem.component.MovieNavigationRailItem
 
 
 private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLevelDestination) =
@@ -50,6 +52,44 @@ fun MovieBottomBar(
                 },
                 label = { Text(stringResource(destination.iconTextId)) },
                 modifier = Modifier
+            )
+        }
+    }
+}
+
+
+
+@Composable
+fun MovieNavRail(
+    destinations: List<TopLevelDestination>,
+    onNavigateToDestination: (TopLevelDestination) -> Unit,
+    currentDestination: NavDestination?,
+    modifier: Modifier = Modifier,
+    onDrawerClicked: () -> Unit = {}
+) {
+    MovieNavigationRail(modifier = modifier) {
+        destinations.forEach { destination ->
+            val selected = currentDestination.isTopLevelDestinationInHierarchy(destination)
+            MovieNavigationRailItem(
+                selected = selected,
+                onClick = {
+                    onDrawerClicked()
+                    onNavigateToDestination(destination)
+                },
+                icon = {
+                    Icon(
+                        imageVector = destination.unselectedIcon,
+                        contentDescription = null,
+                    )
+                },
+                selectedIcon = {
+                    Icon(
+                        imageVector = destination.selectedIcon,
+                        contentDescription = null,
+                    )
+                },
+                label = { Text(stringResource(destination.iconTextId)) },
+                modifier = Modifier,
             )
         }
     }

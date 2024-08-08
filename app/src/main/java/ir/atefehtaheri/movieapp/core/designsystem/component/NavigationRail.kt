@@ -1,30 +1,33 @@
 package ir.atefehtaheri.movieapp.core.designsystem.component
 
-import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
+import androidx.compose.material3.NavigationRailItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun MovieNavigationBar(
+fun MovieNavigationRail(
     modifier: Modifier = Modifier,
-    content: @Composable RowScope.() -> Unit,
+    header: @Composable (ColumnScope.() -> Unit)? = null,
+    content: @Composable ColumnScope.() -> Unit,
 ) {
-    NavigationBar(
+    NavigationRail(
         modifier = modifier,
-        contentColor = MovieNavigationDefaults.navigationContentColor(),
-        tonalElevation = 10.dp,
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        contentColor = MovieNavigationRailDefaults.navigationContentColor(),
+        header = header,
         content = content,
     )
 }
 
+
+
 @Composable
-fun RowScope.MovieNavigationBarItem(
+fun MovieNavigationRailItem(
     selected: Boolean,
     onClick: () -> Unit,
     icon: @Composable () -> Unit,
@@ -34,7 +37,7 @@ fun RowScope.MovieNavigationBarItem(
     label: @Composable (() -> Unit)? = null,
     alwaysShowLabel: Boolean = true,
 ) {
-    NavigationBarItem(
+    NavigationRailItem(
         selected = selected,
         onClick = onClick,
         icon = if (selected) selectedIcon else icon,
@@ -42,19 +45,18 @@ fun RowScope.MovieNavigationBarItem(
         enabled = enabled,
         label = label,
         alwaysShowLabel = alwaysShowLabel,
-        colors = NavigationBarItemDefaults.colors(
-            selectedIconColor = MovieNavigationDefaults.navigationSelectedItemColor(),
-            unselectedIconColor = MovieNavigationDefaults.navigationContentColor(),
-            selectedTextColor = MovieNavigationDefaults.navigationSelectedItemColor(),
-            unselectedTextColor = MovieNavigationDefaults.navigationContentColor(),
-            indicatorColor = MovieNavigationDefaults.navigationIndicatorColor(),
+        colors = NavigationRailItemDefaults.colors(
+            selectedIconColor = MovieNavigationRailDefaults.navigationSelectedItemColor(),
+            unselectedIconColor = MovieNavigationRailDefaults.navigationContentColor(),
+            selectedTextColor = MovieNavigationRailDefaults.navigationSelectedItemColor(),
+            unselectedTextColor = MovieNavigationRailDefaults.navigationContentColor(),
+            indicatorColor = MovieNavigationRailDefaults.navigationIndicatorColor(),
         ),
     )
 }
 
 
-object MovieNavigationDefaults {
-
+object MovieNavigationRailDefaults {
     @Composable
     fun navigationContentColor() = MaterialTheme.colorScheme.onSurfaceVariant
 
