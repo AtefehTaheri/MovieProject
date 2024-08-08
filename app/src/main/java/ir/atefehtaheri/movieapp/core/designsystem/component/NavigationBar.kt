@@ -17,6 +17,7 @@ fun MovieNavigationBar(
 ) {
     NavigationBar(
         modifier = modifier,
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MovieNavigationBarDefaults.navigationContentColor(),
         tonalElevation = 10.dp,
         content = content,
@@ -56,12 +57,12 @@ fun RowScope.MovieNavigationBarItem(
 object MovieNavigationBarDefaults {
 
     @Composable
-    fun navigationContentColor() = MaterialTheme.colorScheme.onSurfaceVariant
+    fun navigationContentColor() = MaterialTheme.colorScheme.primary
 
     @Composable
     fun navigationSelectedItemColor() = MaterialTheme.colorScheme.onPrimaryContainer
 
     @Composable
-    fun navigationIndicatorColor() = MaterialTheme.colorScheme.primary
+    fun navigationIndicatorColor() = MaterialTheme.colorScheme.secondary
 }
 

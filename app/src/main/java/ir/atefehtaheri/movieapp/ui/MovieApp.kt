@@ -83,6 +83,7 @@ private fun MovieScaffold(
             Modifier
                 .fillMaxSize()
                 .consumeWindowInsets(padding)
+
         ) {
             if (!shouldShowBottomBar) {
                 MovieNavRail(

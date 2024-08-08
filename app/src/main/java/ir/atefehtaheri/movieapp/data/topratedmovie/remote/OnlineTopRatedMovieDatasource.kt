@@ -12,7 +12,7 @@ class OnlineTopRatedMovieDatasource @Inject constructor(
     ): TopRatedMovieDatasource {
     override suspend fun getFirstPageTopRatedMovie(): ResultStatus<TopRatedMovieDto> {
        return when(val result =topRatedMovieApi.getTopRatedMovieList()){
-           is NetworkResponse.ApiError -> ResultStatus.Failure(result.body.message)
+           is NetworkResponse.ApiError -> ResultStatus.Failure(result.body.status_message)
            is NetworkResponse.NetworkError -> ResultStatus.Failure(result.error.message ?: "NetworkError")
            is NetworkResponse.Success -> ResultStatus.Success(result.body)
            is NetworkResponse.UnknownError -> ResultStatus.Failure(result.error.message ?: "UnknownError")

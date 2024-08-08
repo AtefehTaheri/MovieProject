@@ -9,17 +9,15 @@ lifecycleRuntimeKtx = "2.8.4"
 activityCompose = "1.9.1"
 composeBom = "2024.04.01"
 androidx-navigation = "2.7.6"
-
-
 retrofit = "2.9.0"
 okhttp = "5.0.0-alpha.2"
 hilt = "2.48"
 androidx-hilt = "1.0.0"
 ksp = "1.8.20-1.0.11"
 kapt = "1.9.0"
-androidx-navigation = "2.7.6"
-
-
+lifecycle-compose="2.6.2"
+coil = "2.6.0"
+dotsindicator_version="5.0"
 
 
 [libraries]
@@ -38,12 +36,6 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3-window-size-class" }
-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidx-navigation" }
-
-
-
-
-
 
 
 
@@ -57,6 +49,13 @@ hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidx-hilt" }
 navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidx-navigation" }
+
+androidx-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle-compose" }
+
+coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+
+dotsindicator = { group = "com.tbuonomo", name = "dotsindicator", version.ref = "dotsindicator_version" }
 
 
 
