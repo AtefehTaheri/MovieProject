@@ -1,16 +1,16 @@
 package ir.atefehtaheri.movieapp.feature.homescreen.uistate
 
-import ir.atefehtaheri.movieapp.data.nowplaying.repository.models.NowPlayingListDataModel
-import ir.atefehtaheri.movieapp.data.topratedmovie.repository.models.TopRatedMovieListDataModel
-import ir.atefehtaheri.movieapp.data.upcominglist.repository.models.UpcomingListDataModel
+import ir.atefehtaheri.movieapp.core.common.models.MediaType
 
 data class HomeUiState(
-    val NowPlayingPagerState: PagerState<NowPlayingListDataModel> = PagerState(),
-    val TopRatedMoviePagerState: PagerState<TopRatedMovieListDataModel> = PagerState(),
-    val UpcomingPagerState: PagerState<UpcomingListDataModel> = PagerState()
+    val movies: Map<MediaType.Movie, PagerState> = mapOf(
+        MediaType.Movie.UPCOMING to PagerState(),
+        MediaType.Movie.TOP_RATED to PagerState(),
+        MediaType.Movie.NOW_PLAYING to PagerState()
+    )
 
-)
-internal val HomeUiState.errorMessage: String?
-    get() = listOf(NowPlayingPagerState, TopRatedMoviePagerState, UpcomingPagerState)
-        .mapNotNull { it.errorMessage }
-        .firstOrNull()
+    )
+internal val HomeUiState.errorMessage
+    get() = movies.values
+        .map { it.errorMessage }
+        .firstOrNull { it != null }
