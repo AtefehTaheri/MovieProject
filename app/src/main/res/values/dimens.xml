@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="drawer_width_min">200dp</dimen>
+    <dimen name="drawer_width_max">300dp</dimen>
+    <dimen name="movie_logo_size">48dp</dimen>
+    <dimen name="logo_padding">16dp</dimen>
+    <dimen name="header_padding_horizontal">20dp</dimen>
+    <dimen name="header_padding_vertical">10dp</dimen>
+    <dimen name="card_Elevation">6dp</dimen>
+    <dimen name="erroe_image_size">100dp</dimen>
+    <dimen name="itemcard_width">130dp</dimen>
+
+</resources>
