@@ -15,6 +15,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import retrofit2.CallAdapter
 import okhttp3.Response
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -48,10 +49,13 @@ fun provideRetrofit(
     baseUrl: String,
     networkResponseCallAdapterFactory: CallAdapter.Factory
 ): Retrofit {
-
+     val loggingInterceptor = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
     val apiKey = BuildConfig.API_KEY
     val client = OkHttpClient.Builder()
         .addInterceptor(ApiKeyInterceptor(apiKey))
+        .addInterceptor(loggingInterceptor)
         .build()
 
     return Retrofit.Builder()
@@ -73,6 +77,7 @@ class ApiKeyInterceptor(private val apiKey: String) : Interceptor {
 
         val urlWithApiKey: HttpUrl = originalHttpUrl.newBuilder()
             .addQueryParameter("api_key", apiKey)
+            .addQueryParameter("language","en-US")
             .build()
 
         val newRequest: Request = originalRequest.newBuilder()

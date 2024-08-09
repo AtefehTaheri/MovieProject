@@ -31,7 +31,6 @@ fun MoviesDto.asMovieListDataModel(): List<MovieDataModel> {
     return this.results.map {
             it.asMovieDataModel()
         }
-
 }
 
 
