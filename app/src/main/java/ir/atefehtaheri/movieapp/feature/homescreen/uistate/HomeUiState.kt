@@ -7,10 +7,16 @@ data class HomeUiState(
         MediaType.Movie.UPCOMING to PagerState(),
         MediaType.Movie.TOP_RATED to PagerState(),
         MediaType.Movie.NOW_PLAYING to PagerState()
-    )
+    ),
+    val tvShows: Map<MediaType.TvShow, PagerState> = mapOf(
+        MediaType.TvShow.TOP_RATED to PagerState(),
+        MediaType.TvShow.Airing to PagerState(),
 
     )
+
+)
+
 internal val HomeUiState.errorMessage
-    get() = movies.values
+    get() = (movies.values +tvShows.values)
         .map { it.errorMessage }
         .firstOrNull { it != null }

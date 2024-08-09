@@ -3,15 +3,12 @@ package ir.atefehtaheri.movieapp.feature.homescreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ir.atefehtaheri.movieapp.core.common.models.MediaType
 import ir.atefehtaheri.movieapp.core.common.models.ResultStatus
-import ir.atefehtaheri.movieapp.data.nowplaying.repository.models.NowPlayingListDataModel
-import ir.atefehtaheri.movieapp.data.topratedmovie.repository.models.TopRatedMovieListDataModel
-import ir.atefehtaheri.movieapp.data.upcominglist.repository.models.UpcomingListDataModel
+import ir.atefehtaheri.movieapp.data.movieslist.repository.MoviesRepository
+import ir.atefehtaheri.movieapp.data.tvshowlist.repository.TvShowsRepository
 import ir.atefehtaheri.movieapp.feature.homescreen.uistate.HomeUiState
 import ir.atefehtaheri.movieapp.feature.homescreen.uistate.PagerState
-import ir.atefehtaheri.nowplaying.repository.NowPlayingRepository
-import ir.atefehtaheri.topratedmovie.repository.TopRatedMovieRepository
-import ir.atefehtaheri.upcominglist.repository.UpcomingListRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -20,10 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
-//    private val nowPlayingRepository: NowPlayingRepository,
-    private val upcomingListRepository: UpcomingListRepository,
-//    private val topRatedMovieRepository: TopRatedMovieRepository
-
+    private val moviesRepository: MoviesRepository,
+    private val tvShowRepository: TvShowsRepository,
 ) : ViewModel() {
 
 
@@ -32,71 +27,51 @@ class HomeScreenViewModel @Inject constructor(
 
 
     init {
-//        getNowPlayingMovie()
-        getUpcomingMovie()
-//        getTopRatedMovie()
+        loadContent()
     }
 
-//    private fun getNowPlayingMovie() {
-//        viewModelScope.launch {
-//            _uiState.update {
-//                it.copy(NowPlayingPagerState = PagerState(null,
-//                    true,
-//                    null)
-//                )
-//            }
-//            val response = nowPlayingRepository.getFirstPageNowPlaying()
-//            when (response) {
-//                is ResultStatus.Failure ->
-//                    _uiState.update {
-//                        it.copy(NowPlayingPagerState = PagerState(null,
-//                            false,
-//                            response.exception_message)
-//                        )
-//                    }
-//                is ResultStatus.Success -> {
-//                    _uiState.update {
-//                        it.copy(
-//                            NowPlayingPagerState = PagerState(
-//                                NowPlayingListDataModel(response.data?.nowplaying),
-//                                false,
-//                                null
-//                            )
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//    }
+    private fun loadContent() {
+        val movieMediaTypes = listOf(
+            MediaType.Movie.UPCOMING,
+            MediaType.Movie.TOP_RATED,
+            MediaType.Movie.NOW_PLAYING
+        )
+        movieMediaTypes.forEach(::getDataMovie)
 
+        val tvShowMediaTypes = listOf(
+            MediaType.TvShow.Airing,
+            MediaType.TvShow.TOP_RATED
+        )
+        tvShowMediaTypes.forEach(::getDataTvShow)
+    }
 
-    private fun getUpcomingMovie() {
+    private fun getDataMovie(mediaType: MediaType.Movie) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    UpcomingPagerState = PagerState(null,
-                        true,
-                        null)
+                    movies = it.movies + (mediaType to PagerState()),
                 )
             }
-            val response = upcomingListRepository.getFirstPageUpcomingList()
+            val response = moviesRepository.getFirstPageMoviesPager(mediaType)
             when (response) {
                 is ResultStatus.Failure ->
                     _uiState.update {
                         it.copy(
-                            UpcomingPagerState = PagerState(null,
+                            movies = it.movies + (mediaType to PagerState(
+                                null,
                                 false,
-                                response.exception_message)
+                                response.exception_message
+                            ))
                         )
                     }
                 is ResultStatus.Success -> {
                     _uiState.update {
                         it.copy(
-                            UpcomingPagerState = PagerState(
-                                UpcomingListDataModel(response.data?.upcominglist),
+                            movies = it.movies + (mediaType to PagerState(
+                                response.data,
                                 false,
                                 null
-                            )
+                            ))
                         )
                     }
                 }
@@ -104,40 +79,38 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
-//
-//    private fun getTopRatedMovie() {
-//        viewModelScope.launch {
-//
-//            _uiState.update {
-//                it.copy(
-//                    TopRatedMoviePagerState = PagerState(null,
-//                        true,
-//                        null)
-//                )
-//            }
-//
-//            val response = topRatedMovieRepository.getFirstPageTopRatedMovie()
-//            when (response) {
-//                is ResultStatus.Failure ->
-//                    _uiState.update {
-//                        it.copy(
-//                            TopRatedMoviePagerState = PagerState(null,
-//                                false,
-//                                response.exception_message)
-//                        )
-//                    }
-//                is ResultStatus.Success -> {
-//                    _uiState.update {
-//                        it.copy(
-//                            TopRatedMoviePagerState = PagerState(
-//                                TopRatedMovieListDataModel(response.data?.topRatedMovieList),
-//                                false,
-//                                null)
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//    }
+    private fun getDataTvShow(mediaType: MediaType.TvShow) {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    tvShows = it.tvShows + (mediaType to PagerState()),
+                )
+            }
+            val response = tvShowRepository.getFirstPageTvShowPager(mediaType)
+            when (response) {
+                is ResultStatus.Failure ->
+                    _uiState.update {
+                        it.copy(
+                            tvShows = it.tvShows + (mediaType to PagerState(
+                                null,
+                                false,
+                                response.exception_message
+                            ))
+                        )
+                    }
+                is ResultStatus.Success -> {
+                    _uiState.update {
+                        it.copy(
+                            tvShows = it.tvShows + (mediaType to PagerState(
+                                response.data,
+                                false,
+                                null
+                            ))
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
 

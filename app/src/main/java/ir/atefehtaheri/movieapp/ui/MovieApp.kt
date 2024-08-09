@@ -14,12 +14,10 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.testTag
 import com.omidtaheri.template.ui.MovieAppState
 import com.omidtaheri.template.ui.rememberMyAppState
 import ir.atefehtaheri.movieapp.core.common.models.AppNavigationType
@@ -82,7 +80,13 @@ private fun MovieScaffold(
         Row(
             Modifier
                 .fillMaxSize()
+                .padding(padding)
                 .consumeWindowInsets(padding)
+                .windowInsetsPadding(
+                    WindowInsets.safeDrawing.only(
+                        WindowInsetsSides.Horizontal,
+                    ),
+                )
 
         ) {
             if (!shouldShowBottomBar) {

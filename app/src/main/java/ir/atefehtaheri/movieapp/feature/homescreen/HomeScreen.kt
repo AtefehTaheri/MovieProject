@@ -28,7 +28,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavOptions
 import ir.atefehtaheri.homescreen.components.UpcomingPager
 import ir.atefehtaheri.movieapp.R
+import ir.atefehtaheri.movieapp.core.common.models.MediaType
 import ir.atefehtaheri.movieapp.core.designsystem.component.ShowError
+import ir.atefehtaheri.movieapp.feature.homescreen.component.HorizontalItemList
 import ir.atefehtaheri.movieapp.feature.homescreen.uistate.errorMessage
 
 @Composable
@@ -41,9 +43,7 @@ fun HomeScreen(
 
 ) {
     val scrollstate = rememberScrollState()
-
     val homeUiState by homeScreenViewModel.uiState.collectAsStateWithLifecycle()
-
 
     if (homeUiState.errorMessage != null) {
         ShowError(homeUiState.errorMessage!!)
@@ -55,7 +55,6 @@ fun HomeScreen(
                 .fillMaxSize()
                 .verticalScroll(scrollstate)
                 .background(MaterialTheme.colorScheme.primaryContainer)
-
         ) {
 
             Header(
@@ -63,21 +62,37 @@ fun HomeScreen(
             ) { navToUpcoming(null) }
             UpcomingPager(
                 onItemClick,
-                homeUiState.UpcomingPagerState
+                homeUiState.movies.get(MediaType.Movie.UPCOMING)!!
             )
             Header(
                 R.string.now_playing
             ) { navToNowPlaying(null) }
-//            NowPlayingList(
-//                onItemClick
-//            )
+            HorizontalItemList(
+                homeUiState.movies.get(MediaType.Movie.NOW_PLAYING)!!,
+                MediaType.Movie.NOW_PLAYING,
+                onItemClick
+            )
+            HorizontalItemList(
+                homeUiState.tvShows.get(MediaType.TvShow.Airing)!!,
+                MediaType.TvShow.Airing,
+                onItemClick,
+
+            )
             Header(
                 R.string.top_rated
             )
             { navToTopRated(null) }
-//            TopRatedMovieList(
-//                onItemClick
-//            )
+
+            HorizontalItemList(
+                homeUiState.movies.get(MediaType.Movie.TOP_RATED)!!,
+                MediaType.Movie.TOP_RATED,
+                onItemClick
+            )
+            HorizontalItemList(
+                homeUiState.tvShows.get(MediaType.TvShow.TOP_RATED)!!,
+                MediaType.TvShow.TOP_RATED,
+                onItemClick
+            )
             Spacer(modifier = Modifier.height(10.dp))
         }
 
@@ -93,7 +108,14 @@ fun Header(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 10.dp),
+            .padding(
+                horizontal = dimensionResource(
+                    id = R.dimen.header_padding_horizontal
+                ),
+                vertical = dimensionResource(
+                    id = R.dimen.header_padding_vertical
+                ),
+            ),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     )

@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    kotlin("kapt")
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -8,6 +10,13 @@ android {
     compileSdk = 34
 
     defaultConfig {
+
+        buildConfigField(
+            "String",
+            "API_KEY",
+            "\"${project.findProperty("API_KEY")}\""
+        )
+
         applicationId = "ir.atefehtaheri.movieapp"
         minSdk = 30
         targetSdk = 34
@@ -18,6 +27,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
 
     }
 
@@ -39,7 +49,7 @@ android {
     }
     buildFeatures {
         compose = true
-
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -68,4 +78,28 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logger)
+
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.hilt.navigation.compose)
+    implementation(libs.navigation)
+
+    implementation(libs.coil)
+    implementation(libs.coil.compose)
+
+
+    implementation(libs.dotsindicator)
+    implementation(libs.androidx.lifecycle)
+
+
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.9.3") // Add this for logging
 }
