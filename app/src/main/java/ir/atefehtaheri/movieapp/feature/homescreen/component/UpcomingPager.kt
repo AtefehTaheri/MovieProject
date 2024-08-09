@@ -5,8 +5,8 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -20,7 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -31,30 +33,29 @@ import com.tbuonomo.viewpagerdotsindicator.compose.type.ShiftIndicatorType
 import ir.atefehtaheri.movieapp.R
 import ir.atefehtaheri.movieapp.core.common.BASE_URL
 import ir.atefehtaheri.movieapp.core.designsystem.component.shimmerEffect
-import ir.atefehtaheri.movieapp.data.upcominglist.repository.models.UpcomingListDataModel
-import ir.atefehtaheri.movieapp.data.upcominglist.repository.models.UpcomingMovieDataModel
+import ir.atefehtaheri.movieapp.data.movieslist.repository.models.MovieDataModel
 import ir.atefehtaheri.movieapp.feature.homescreen.uistate.PagerState
 
 
 @Composable
 internal fun UpcomingPager(
-    onItemClick:() -> Unit,
-    state:PagerState<UpcomingListDataModel>,
+    onItemClick: () -> Unit,
+    state: PagerState,
     modifier: Modifier = Modifier,
 
     ) {
     when {
-        state.isLoading -> LoadingState()
-        else -> ShowListState(state.listDataModel!!.upcominglist,onItemClick)
+        state.isLoading -> LoadingState(modifier)
+        else -> ShowListState(state.listDataModel, onItemClick,modifier)
     }
 }
 
 @Composable
 private fun LoadingState(modifier: Modifier = Modifier) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .height(200.dp)
+            .aspectRatio(2 / 1f)
             .padding(10.dp)
             .shimmerEffect()
     )
@@ -63,55 +64,51 @@ private fun LoadingState(modifier: Modifier = Modifier) {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ShowListState(
-    upcominglist: List<UpcomingMovieDataModel>?,
-    onItemClick:() -> Unit,
+    upcominglist: List<MovieDataModel>?,
+    onItemClick: () -> Unit,
     modifier: Modifier = Modifier
-    ) {
+) {
 
     upcominglist?.let {
 
         val pagerState =
-            rememberPagerState(pageCount = { upcominglist!!.size })
+            rememberPagerState(pageCount = { upcominglist.size })
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(20.dp)
         ) {
             ElevatedCard(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth(),
                 elevation = CardDefaults.cardElevation(
-                    defaultElevation = 6.dp
+                    defaultElevation = dimensionResource(id = R.dimen.card_Elevation)
                 ),
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                 ),
             ) {
-
-
                 HorizontalPager(
                     modifier = Modifier,
                     state = pagerState
                 ) { page ->
-                    val image = upcominglist!![page].backdrop_path
+                    val image = upcominglist[page].backdrop_path
                     Box {
-
 
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
                                 .data(Uri.parse(BASE_URL + image) ?: "")
-
                                 .crossfade(true)
                                 .build(),
                             placeholder = painterResource(R.drawable.placeholder),
                             error = painterResource(R.drawable.placeholder),
                             fallback = painterResource(R.drawable.placeholder),
-                            contentDescription = "",
+                            contentDescription = stringResource(id = R.string.upcoming_movie_image),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(200.dp).clickable {
+                                .aspectRatio(2 / 1f)
+                                .clickable {
                                     onItemClick()
-
                                 },
                             contentScale = ContentScale.FillBounds
                         )
@@ -121,7 +118,7 @@ private fun ShowListState(
                                 .background(MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.5f))
                                 .padding(10.dp),
                             textAlign = TextAlign.Center,
-                            text = upcominglist!![page].title,
+                            text = upcominglist[page].title,
                             color = MaterialTheme.colorScheme.onPrimary
                         )
 
@@ -133,7 +130,7 @@ private fun ShowListState(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 10.dp),
-                dotCount = upcominglist!!.size,
+                dotCount = upcominglist.size,
                 type = ShiftIndicatorType(
                     dotsGraphic = DotGraphic(
                         12.dp,
@@ -150,7 +147,5 @@ private fun ShowListState(
         }
 
     }
-
-
 }
 
