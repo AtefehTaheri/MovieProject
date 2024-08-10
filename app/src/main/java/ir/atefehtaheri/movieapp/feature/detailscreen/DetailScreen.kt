@@ -10,18 +10,19 @@ import ir.atefehtaheri.movieapp.feature.detailscreen.component.DetailTvShow
 
 @Composable
 internal fun DetailScreen(
-    type: MediaType,
-    id:String,
+    type: String,
+    id: String,
     detailScreenViewModel: DetailScreenViewModel = hiltViewModel()
 
 ) {
-    when(type){
+    when (type) {
 
-        is MediaType.Movie -> {
+        MediaType.Movie.name -> {
             detailScreenViewModel.getDetailMovie(id)
-            DetailMovie(detailScreenViewModel.detailMovie)
+            DetailMovie()
         }
-        is MediaType.TvShow -> {
+
+        MediaType.TvShow.name -> {
             detailScreenViewModel.getDetailTvShow(id)
             DetailTvShow()
         }

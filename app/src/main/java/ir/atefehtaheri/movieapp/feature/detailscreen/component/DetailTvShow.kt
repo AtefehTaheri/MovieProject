@@ -27,10 +27,12 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
+import androidx.compose.material3.TabPosition
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -50,12 +52,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ir.atefehtaheri.movieapp.R
 import ir.atefehtaheri.movieapp.core.designsystem.component.ShowError
-import ir.atefehtaheri.movieapp.data.detailitem.repository.models.MovieDetailDataModel
+import ir.atefehtaheri.movieapp.data.detailitem.repository.models.TvShowDetailDataModel
 import ir.atefehtaheri.movieapp.feature.detailscreen.DetailScreenViewModel
 import ir.atefehtaheri.movieapp.feature.detailscreen.uistate.DetailState
 
 @Composable
-internal fun DetailMovie(
+internal fun DetailTvShow(
     modifier: Modifier = Modifier,
     detailScreenViewModel: DetailScreenViewModel = hiltViewModel()
 ) {
@@ -63,19 +65,20 @@ internal fun DetailMovie(
     if (detailState.errorMessage != null) {
         ShowError(detailState.errorMessage!!)
     } else {
-        DetailMovieScreen(modifier, detailState)
+        DetailTvShowScreen(modifier,detailState)
     }
+
+
 }
 
 @Composable
-private fun DetailMovieScreen(
+private fun DetailTvShowScreen(
     modifier: Modifier = Modifier,
-    detailState: DetailState
-) {
+    detailState: DetailState ){
 
     when {
         detailState.loading -> LoadingState(modifier)
-        else -> ShowListState(modifier, detailState.MovieDetailDataModel!!)
+        else -> ShowListState(modifier,detailState.tvShowDetailDataModel!!)
     }
 }
 
@@ -99,9 +102,8 @@ private fun LoadingState(
 @Composable
 private fun ShowListState(
     modifier: Modifier = Modifier,
-    movieDetailDataModel: MovieDetailDataModel,
+    tvShowDetailDataModel: TvShowDetailDataModel,
 ) {
-
     BoxWithConstraints {
         val screenHeight = maxHeight
         val scrollState = rememberScrollState()
@@ -111,31 +113,29 @@ private fun ShowListState(
                 .background(MaterialTheme.colorScheme.primaryContainer)
                 .verticalScroll(state = scrollState)
         ) {
-
             HeaderScreen(
-                movieDetailDataModel.poster_path,
-                movieDetailDataModel.title,
-                movieDetailDataModel.status,
-                movieDetailDataModel.images
+                tvShowDetailDataModel.poster_path,
+                tvShowDetailDataModel.name,
+                tvShowDetailDataModel.status,
+                tvShowDetailDataModel.images
             )
-            MovieMetadataView(movieDetailDataModel)
+            TvShowMetadataView(tvShowDetailDataModel)
 
             Column(modifier = Modifier.height(screenHeight)) {
-                InformationTabView(scrollState, movieDetailDataModel)
+                InformationTabView(scrollState, tvShowDetailDataModel)
             }
         }
     }
 }
 
 @Composable
-private fun MovieMetadataView(movieDetailDataModel: MovieDetailDataModel) {
-
+private fun TvShowMetadataView(tvShowDetailDataModel: TvShowDetailDataModel){
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(20.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+        verticalAlignment = Alignment.CenterVertically) {
+
         Column(
             modifier = Modifier.weight(1f),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -147,16 +147,14 @@ private fun MovieMetadataView(movieDetailDataModel: MovieDetailDataModel) {
                 tint = MaterialTheme.colorScheme.onTertiaryContainer
             )
             Text(
-                text = movieDetailDataModel.release_date.split("-")[0],
+                text = tvShowDetailDataModel.first_air_date.split("-")[0],
                 color = MaterialTheme.colorScheme.primary
             )
         }
-
         Divider(
-            modifier = Modifier
+            color = Color.White, modifier = Modifier
                 .height(20.dp)
-                .width(2.dp),
-            color = Color.White
+                .width(2.dp)
         )
 
 
@@ -170,11 +168,10 @@ private fun MovieMetadataView(movieDetailDataModel: MovieDetailDataModel) {
                 tint = MaterialTheme.colorScheme.onTertiaryContainer
             )
             Text(
-                text = String.format("%.1f", movieDetailDataModel.vote_average),
+                text = String.format("%.1f", tvShowDetailDataModel.vote_average),
                 color = MaterialTheme.colorScheme.primary
             )
         }
-
         Divider(
             color = Color.White, modifier = Modifier
                 .height(20.dp)
@@ -185,27 +182,29 @@ private fun MovieMetadataView(movieDetailDataModel: MovieDetailDataModel) {
             modifier = Modifier.weight(1f),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
             Icon(
                 Icons.Rounded.Timer,
                 contentDescription = stringResource(id = R.string.runtime),
                 tint = MaterialTheme.colorScheme.onTertiaryContainer
             )
             Text(
-                text = "${movieDetailDataModel.runtime} minutes",
+                text = "${tvShowDetailDataModel.episode_run_time.firstOrNull() ?: "-"} minutes",
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center
             )
+
         }
     }
 }
 
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun InformationTabView(scrollState: ScrollState, movieDetailDataModel: MovieDetailDataModel) {
-
+private fun InformationTabView(scrollState: ScrollState,tvShowDetailDataModel: TvShowDetailDataModel){
 
     var selectedTabIndex by remember { mutableIntStateOf(0) }
-    val pagerState = rememberPagerState { InformationTabs.entries.size }
+    val pagerState = rememberPagerState { InformationTvTabs.entries.size }
 
     LaunchedEffect(key1 = selectedTabIndex) {
         pagerState.animateScrollToPage(selectedTabIndex)
@@ -215,7 +214,6 @@ private fun InformationTabView(scrollState: ScrollState, movieDetailDataModel: M
         if (!pagerState.isScrollInProgress)
             selectedTabIndex = pagerState.currentPage
     }
-
 
     TabRow(
         modifier = Modifier
@@ -229,7 +227,7 @@ private fun InformationTabView(scrollState: ScrollState, movieDetailDataModel: M
             Box {}
         }
     ) {
-        InformationTabs.entries.forEachIndexed { index, currentTab ->
+        InformationTvTabs.entries.forEachIndexed { index, currentTab ->
             Tab(
                 modifier = if (selectedTabIndex == index) Modifier
                     .clip(RoundedCornerShape(50))
@@ -244,7 +242,6 @@ private fun InformationTabView(scrollState: ScrollState, movieDetailDataModel: M
                 selected = selectedTabIndex == index,
                 selectedContentColor = MaterialTheme.colorScheme.scrim,
                 unselectedContentColor = MaterialTheme.colorScheme.outline,
-
                 onClick = {
                     selectedTabIndex = index
                 },
@@ -257,7 +254,6 @@ private fun InformationTabView(scrollState: ScrollState, movieDetailDataModel: M
             )
         }
     }
-
     HorizontalPager(
         state = pagerState,
         modifier = Modifier
@@ -274,19 +270,19 @@ private fun InformationTabView(scrollState: ScrollState, movieDetailDataModel: M
                         )
                     }
                 }
-            }
-            )
+            })
     ) { page: Int ->
         when (page) {
-            0 -> InformationMovieScreen(
-                movieDetailDataModel.overview,
-                movieDetailDataModel.genres
-            )
-            1 -> CreditsScreen(movieDetailDataModel.credits)
+            0 -> InformationTvScreen(tvShowDetailDataModel)
+            1 -> CreditsScreen(tvShowDetailDataModel.credits)
+            2 -> SeasonsScreen(tvShowDetailDataModel.seasons)
         }
     }
 }
-enum class InformationTabs(val text: String) {
+
+
+enum class InformationTvTabs(val text: String) {
     About("About"),
-    Credits("Credits")
+    Credits("Credits"),
+    Seasons("Seasons")
 }

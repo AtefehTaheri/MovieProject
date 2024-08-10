@@ -10,7 +10,7 @@ interface TvShowApi {
 
     @GET("3/tv/top_rated?")
     suspend fun getTopRatedTvShowList(
-//        @Query("language") language:String= "en-US",
+        @Query("language") language:String= "en-US",
         @Query("page") page:Int = 1,
     ): NetworkResponse<TvShowsDto, ErrorResponse>
 
@@ -18,7 +18,7 @@ interface TvShowApi {
 
     @GET("3/tv/airing_today?")
     suspend fun getTvAiringList(
-//        @Query("language") language:String= "en-US",
+        @Query("language") language:String= "en-US",
         @Query("page") page:Int = 1,
     ): NetworkResponse<TvShowsDto, ErrorResponse>
 

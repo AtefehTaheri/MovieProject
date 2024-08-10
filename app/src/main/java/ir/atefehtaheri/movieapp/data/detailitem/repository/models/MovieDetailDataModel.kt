@@ -19,6 +19,7 @@ data class MovieDetailDataModel(
 )
 
 fun MovieDetailDto.asMovieDetailDataModel():MovieDetailDataModel{
+
     return MovieDetailDataModel(
         genres=genres.map{it.name},
         adult=adult,

@@ -35,7 +35,7 @@ fun CreditsScreen(credits: Credits) {
                     defaultElevation = 6.dp
                 ),
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
                 ),
             ) {
                 Text(
@@ -44,7 +44,7 @@ fun CreditsScreen(credits: Credits) {
                         .align(Alignment.CenterHorizontally),
                     text = stringResource(id = R.string.casts_title),
                     style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
@@ -61,7 +61,7 @@ fun CreditsScreen(credits: Credits) {
                     defaultElevation = 6.dp
                 ),
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
                 ),
             ) {
 
@@ -71,7 +71,7 @@ fun CreditsScreen(credits: Credits) {
                         .align(Alignment.CenterHorizontally),
                     text = stringResource(id = R.string.crews_title),
                     style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }

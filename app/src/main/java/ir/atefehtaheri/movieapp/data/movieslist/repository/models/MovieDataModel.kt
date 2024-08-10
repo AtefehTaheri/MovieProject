@@ -1,5 +1,6 @@
 package ir.atefehtaheri.movieapp.data.movieslist.repository.models
 
+import ir.atefehtaheri.movieapp.core.common.models.MediaType
 import ir.atefehtaheri.movieapp.data.movieslist.remote.models.Movie
 import ir.atefehtaheri.movieapp.data.movieslist.remote.models.MoviesDto
 
@@ -14,7 +15,8 @@ data class MovieDataModel(
     val overview: String,
     val poster_path: String?,
     val release_date: String,
-    val vote_average: Double
+    val vote_average: Double,
+    val type:String
 )
 
 
@@ -43,6 +45,7 @@ fun Movie.asMovieDataModel(): MovieDataModel {
         overview = overview,
         poster_path = poster_path,
         release_date = release_date,
-        vote_average = vote_average
+        vote_average = vote_average,
+        type= MediaType.Movie.name
     )
 }
