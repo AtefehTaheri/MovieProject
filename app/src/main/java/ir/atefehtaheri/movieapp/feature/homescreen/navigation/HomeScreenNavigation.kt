@@ -18,7 +18,7 @@ fun NavGraphBuilder.homeScreenDestination(
 //    navToUpcoming :  (NavOptions?) -> Unit,
 //    navToNowPlaying :  (NavOptions?) -> Unit,
 //    navToTopRated :  (NavOptions?) -> Unit,
-//    onItemClick:(Type, String, NavOptions?) -> Unit
+    onItemClick:(String, String, NavOptions?) -> Unit
    ) {
 
     composable(route = HomeScreenRoute) {
@@ -26,7 +26,7 @@ fun NavGraphBuilder.homeScreenDestination(
 //            navToUpcoming,
 //            navToNowPlaying ,
 //            navToTopRated,
-//            onItemClick
+            onItemClick= onItemClick
         )
     }
 }

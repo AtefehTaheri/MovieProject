@@ -29,10 +29,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavOptions
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import ir.atefehtaheri.movieapp.R
 import ir.atefehtaheri.movieapp.core.common.BASE_URL
+import ir.atefehtaheri.movieapp.core.common.models.MediaType
 import ir.atefehtaheri.movieapp.core.designsystem.component.shimmerEffect
 import ir.atefehtaheri.movieapp.data.movieslist.repository.models.MovieDataModel
 
@@ -41,7 +43,8 @@ import ir.atefehtaheri.movieapp.data.movieslist.repository.models.MovieDataModel
 fun ItemCard(
     movieItem: MovieDataModel?,
     loading: Boolean = true,
-    onItemClick: () -> Unit = {}) {
+    onItemClick: (String, String, NavOptions?) -> Unit = { _, _, _ -> }
+) {
 
     ElevatedCard(
         modifier = Modifier
@@ -51,7 +54,11 @@ fun ItemCard(
             .aspectRatio(1 / 1.5f)
             .clickable {
                 movieItem?.let {
-                    onItemClick()
+                    onItemClick(
+                        movieItem.type,
+                        movieItem.id.toString(),
+                        null
+                    )
                 }
             },
         elevation = CardDefaults.cardElevation(
@@ -69,10 +76,11 @@ fun ItemCard(
             )
 
         } else {
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .weight(2f)
-                )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(2f)
+            )
             {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
@@ -104,7 +112,7 @@ fun ItemCard(
                     )
 
                     Text(
-                        text = String.format("%.1f", movieItem!!.vote_average),
+                        text = String.format("%.1f", movieItem.vote_average),
                         color = MaterialTheme.colorScheme.secondaryContainer
                     )
                 }

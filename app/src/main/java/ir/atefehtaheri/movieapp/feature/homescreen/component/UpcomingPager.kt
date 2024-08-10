@@ -25,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavOptions
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.tbuonomo.viewpagerdotsindicator.compose.DotsIndicator
@@ -32,6 +33,7 @@ import com.tbuonomo.viewpagerdotsindicator.compose.model.DotGraphic
 import com.tbuonomo.viewpagerdotsindicator.compose.type.ShiftIndicatorType
 import ir.atefehtaheri.movieapp.R
 import ir.atefehtaheri.movieapp.core.common.BASE_URL
+import ir.atefehtaheri.movieapp.core.common.models.MediaType
 import ir.atefehtaheri.movieapp.core.designsystem.component.shimmerEffect
 import ir.atefehtaheri.movieapp.data.movieslist.repository.models.MovieDataModel
 import ir.atefehtaheri.movieapp.feature.homescreen.uistate.PagerState
@@ -39,7 +41,7 @@ import ir.atefehtaheri.movieapp.feature.homescreen.uistate.PagerState
 
 @Composable
 internal fun UpcomingPager(
-    onItemClick: () -> Unit,
+    onItemClick: (String, String, NavOptions?) -> Unit,
     state: PagerState,
     modifier: Modifier = Modifier,
 
@@ -65,7 +67,7 @@ private fun LoadingState(modifier: Modifier = Modifier) {
 @Composable
 private fun ShowListState(
     upcominglist: List<MovieDataModel>?,
-    onItemClick: () -> Unit,
+    onItemClick: (String, String, NavOptions?) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -108,7 +110,11 @@ private fun ShowListState(
                                 .fillMaxWidth()
                                 .aspectRatio(2 / 1f)
                                 .clickable {
-                                    onItemClick()
+                                    onItemClick(
+                                        upcominglist[page].type,
+                                        upcominglist[page].id.toString(),
+                                        null
+                                    )
                                 },
                             contentScale = ContentScale.FillBounds
                         )
