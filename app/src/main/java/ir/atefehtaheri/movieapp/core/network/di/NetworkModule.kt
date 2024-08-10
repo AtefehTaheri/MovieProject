@@ -77,7 +77,7 @@ class ApiKeyInterceptor(private val apiKey: String) : Interceptor {
 
         val urlWithApiKey: HttpUrl = originalHttpUrl.newBuilder()
             .addQueryParameter("api_key", apiKey)
-            .addQueryParameter("language","en-US")
+//            .addQueryParameter("language","en-US")
             .build()
 
         val newRequest: Request = originalRequest.newBuilder()

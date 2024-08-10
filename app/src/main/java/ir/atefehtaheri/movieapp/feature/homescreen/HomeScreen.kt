@@ -38,7 +38,7 @@ fun HomeScreen(
     navToUpcoming: (NavOptions?) -> Unit={},
     navToNowPlaying: (NavOptions?) -> Unit = {},
     navToTopRated: (NavOptions?) -> Unit = {},
-    onItemClick: () -> Unit= {},
+    onItemClick: (String, String, NavOptions?) -> Unit,
     homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
 
 ) {

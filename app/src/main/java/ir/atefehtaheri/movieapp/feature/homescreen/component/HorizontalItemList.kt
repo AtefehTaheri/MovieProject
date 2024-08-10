@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavOptions
 import ir.atefehtaheri.movieapp.R
 import ir.atefehtaheri.movieapp.core.common.models.MediaType
 import ir.atefehtaheri.movieapp.data.movieslist.repository.models.MovieDataModel
@@ -23,7 +24,7 @@ import ir.atefehtaheri.movieapp.feature.homescreen.uistate.PagerState
 internal fun HorizontalItemList(
     state: PagerState,
     mediaType: MediaType,
-    onItemClick: () -> Unit,
+    onItemClick: (String, String, NavOptions?) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -41,7 +42,8 @@ internal fun HorizontalItemList(
         )
         when {
             state.isLoading -> LoadingState(modifier)
-            else -> ShowListState(state.listDataModel, onItemClick)
+            else -> ShowListState(state.listDataModel,
+                onItemClick)
         }
 
     }
@@ -69,7 +71,7 @@ private fun LoadingState(
 @Composable
 private fun ShowListState(
     listData: List<MovieDataModel>?,
-    onItemClick: () -> Unit,
+    onItemClick: (String, String, NavOptions?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     listData?.let { list ->
