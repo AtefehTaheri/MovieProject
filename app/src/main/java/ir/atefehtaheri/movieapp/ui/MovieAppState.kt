@@ -15,7 +15,6 @@ import ir.atefehtaheri.movieapp.core.common.models.AppContentType
 import ir.atefehtaheri.movieapp.core.common.models.AppNavigationType
 import ir.atefehtaheri.movieapp.feature.homescreen.navigation.HomeScreenRoute
 import ir.atefehtaheri.movieapp.feature.homescreen.navigation.navigateToHomeScreen
-import ir.atefehtaheri.movieapp.feature.searchscreen.navigation.navigateToSearchScreen
 import ir.atefehtaheri.movieapp.navigation.TopLevelDestination
 
 
@@ -100,7 +99,7 @@ class MovieAppState(
                 navController.navigateToHomeScreen()
             }
             TopLevelDestination.SEARCH -> {
-                navController.navigateToSearchScreen()
+//                navController.navigateToSearchScreen()
             }
             TopLevelDestination.FAVORITE -> {}
         }

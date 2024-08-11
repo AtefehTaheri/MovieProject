@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import ir.atefehtaheri.movieapp.core.common.models.MediaType
 import ir.atefehtaheri.movieapp.feature.homescreen.HomeScreen
 
 
@@ -18,7 +19,7 @@ fun NavGraphBuilder.homeScreenDestination(
 //    navToUpcoming :  (NavOptions?) -> Unit,
 //    navToNowPlaying :  (NavOptions?) -> Unit,
 //    navToTopRated :  (NavOptions?) -> Unit,
-    onItemClick:(String, String, NavOptions?) -> Unit
+    onItemClick:(MediaType, String, NavOptions?) -> Unit
    ) {
 
     composable(route = HomeScreenRoute) {

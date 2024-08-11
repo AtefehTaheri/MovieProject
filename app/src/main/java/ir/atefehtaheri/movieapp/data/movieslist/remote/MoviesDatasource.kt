@@ -6,6 +6,5 @@ import ir.atefehtaheri.movieapp.data.movieslist.remote.models.MoviesDto
 
 interface MoviesDatasource {
 
-    suspend fun getFirstPageMoviesPager(mediaType: MediaType.Movie): ResultStatus<MoviesDto>
-
+    suspend fun getMoviesPager(mediaType: MediaType.Movie,page: Int): ResultStatus<MoviesDto>
 }

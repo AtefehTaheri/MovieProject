@@ -6,14 +6,14 @@ import ir.atefehtaheri.movieapp.data.tvshowlist.remote.models.TvShow
 import ir.atefehtaheri.movieapp.data.tvshowlist.remote.models.TvShowsDto
 
 
-fun TvShowsDto.asMovieListDataModel(): List<MovieDataModel> {
+fun TvShowsDto.asMovieListDataModel(mediaType: MediaType.TvShow): List<MovieDataModel> {
     return this.results.map {
-        it.asMovieDataModel()
+        it.asMovieDataModel(mediaType)
     }
 }
 
 
-fun TvShow.asMovieDataModel(): MovieDataModel {
+fun TvShow.asMovieDataModel(mediaType: MediaType.TvShow): MovieDataModel {
     return MovieDataModel(
         backdrop_path = backdrop_path,
         id = id,
@@ -22,7 +22,7 @@ fun TvShow.asMovieDataModel(): MovieDataModel {
         poster_path = poster_path,
         release_date = first_air_date,
         vote_average = vote_average,
-        type= MediaType.TvShow.name
+        media_type = mediaType
     )
 }
 

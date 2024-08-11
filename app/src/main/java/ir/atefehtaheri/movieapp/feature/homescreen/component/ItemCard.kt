@@ -43,7 +43,7 @@ import ir.atefehtaheri.movieapp.data.movieslist.repository.models.MovieDataModel
 fun ItemCard(
     movieItem: MovieDataModel?,
     loading: Boolean = true,
-    onItemClick: (String, String, NavOptions?) -> Unit = { _, _, _ -> }
+    onItemClick: (MediaType, String, NavOptions?) -> Unit = { _, _, _ -> }
 ) {
 
     ElevatedCard(
@@ -55,7 +55,7 @@ fun ItemCard(
             .clickable {
                 movieItem?.let {
                     onItemClick(
-                        movieItem.type,
+                        movieItem.media_type,
                         movieItem.id.toString(),
                         null
                     )

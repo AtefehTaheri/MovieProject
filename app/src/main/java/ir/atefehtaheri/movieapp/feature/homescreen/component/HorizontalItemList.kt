@@ -24,7 +24,7 @@ import ir.atefehtaheri.movieapp.feature.homescreen.uistate.PagerState
 internal fun HorizontalItemList(
     state: PagerState,
     mediaType: MediaType,
-    onItemClick: (String, String, NavOptions?) -> Unit,
+    onItemClick: (MediaType, String, NavOptions?) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -71,7 +71,7 @@ private fun LoadingState(
 @Composable
 private fun ShowListState(
     listData: List<MovieDataModel>?,
-    onItemClick: (String, String, NavOptions?) -> Unit,
+    onItemClick: (MediaType, String, NavOptions?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     listData?.let { list ->

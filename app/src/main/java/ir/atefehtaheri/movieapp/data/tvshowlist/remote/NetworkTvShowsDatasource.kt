@@ -13,7 +13,7 @@ class NetworkTvShowsDatasource @Inject constructor(
 ) : TvShowsDatasource {
 
 
-    override suspend fun getFirstPageTvShowPager(mediaType: MediaType.TvShow): ResultStatus<TvShowsDto> {
+    override suspend fun getTvShowPager(mediaType: MediaType.TvShow, page: Int): ResultStatus<TvShowsDto> {
 
 
         val result = when (mediaType) {

@@ -13,9 +13,9 @@ class NetworkTvShowsRepository @Inject constructor(
 
     override suspend fun getFirstPageTvShowPager(mediaType: MediaType.TvShow): ResultStatus<List<MovieDataModel>> {
 
-        return when (val result = tvShowsDatasource.getFirstPageTvShowPager(mediaType)) {
+        return when (val result = tvShowsDatasource.getTvShowPager(mediaType,1)) {
             is ResultStatus.Failure -> ResultStatus.Failure(result.exception_message)
-            is ResultStatus.Success -> ResultStatus.Success(result.data?.asMovieListDataModel())
+            is ResultStatus.Success -> ResultStatus.Success(result.data?.asMovieListDataModel(mediaType))
         }
     }
 

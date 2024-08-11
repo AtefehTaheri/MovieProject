@@ -7,20 +7,21 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import ir.atefehtaheri.movieapp.core.common.models.MediaType
+import ir.atefehtaheri.movieapp.core.common.models.Type
 import ir.atefehtaheri.movieapp.feature.detailscreen.DetailScreen
 
 const val DetailScreenRoute = "detailscreen_route?id={id}&type={type}"
 
 
 fun NavController.navigateToDetailScreen(
-    type: String,
+    mediaType: MediaType,
     id: String,
     navOptions: NavOptions? = null
 ) {
     this.navigate(
         DetailScreenRoute
             .replace("{id}", id)
-            .replace("{type}", type), navOptions
+            .replace("{type}", mediaType.type.name), navOptions
     )
 }
 
@@ -39,7 +40,12 @@ fun NavGraphBuilder.detailscreenDestination() {
         )
     ) {
         val id = it.arguments!!.getString("id")!!
-        val type = it.arguments!!.getString("type")!!
+        val typeName = it.arguments!!.getString("type")!!
+        val type = when (typeName) {
+            Type.TvShow.name -> Type.TvShow
+            else -> Type.Movie
+        }
+
         DetailScreen(type, id)
     }
 }

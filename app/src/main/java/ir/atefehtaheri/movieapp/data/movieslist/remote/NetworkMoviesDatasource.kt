@@ -9,17 +9,16 @@ import ir.atefehtaheri.network.NetworkResponse
 import javax.inject.Inject
 
 class NetworkMoviesDatasource @Inject constructor(
-    private val movieApi: MovieApi,
+    private val movieApi: MovieApi
 ) : MoviesDatasource {
 
 
-    override suspend fun getFirstPageMoviesPager(mediaType: MediaType.Movie): ResultStatus<MoviesDto> {
-
+    override suspend fun getMoviesPager(mediaType: MediaType.Movie, page: Int): ResultStatus<MoviesDto> {
 
         val result = when (mediaType) {
-            MediaType.Movie.UPCOMING -> movieApi.getUpcomingList()
-            MediaType.Movie.TOP_RATED -> movieApi.getTopRatedMovieList()
-            MediaType.Movie.NOW_PLAYING -> movieApi.getNowPlaying()
+            MediaType.Movie.UPCOMING -> movieApi.getUpcomingList(page=page)
+            MediaType.Movie.TOP_RATED -> movieApi.getTopRatedMovieList(page=page)
+            MediaType.Movie.NOW_PLAYING -> movieApi.getNowPlaying(page=page)
         }
 
         return when (result) {
@@ -34,5 +33,6 @@ class NetworkMoviesDatasource @Inject constructor(
             )
         }
     }
+
 
 }

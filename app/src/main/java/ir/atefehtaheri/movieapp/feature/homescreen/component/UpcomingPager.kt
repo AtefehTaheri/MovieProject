@@ -41,7 +41,7 @@ import ir.atefehtaheri.movieapp.feature.homescreen.uistate.PagerState
 
 @Composable
 internal fun UpcomingPager(
-    onItemClick: (String, String, NavOptions?) -> Unit,
+    onItemClick: (MediaType, String, NavOptions?) -> Unit,
     state: PagerState,
     modifier: Modifier = Modifier,
 
@@ -67,7 +67,7 @@ private fun LoadingState(modifier: Modifier = Modifier) {
 @Composable
 private fun ShowListState(
     upcominglist: List<MovieDataModel>?,
-    onItemClick: (String, String, NavOptions?) -> Unit,
+    onItemClick: (MediaType, String, NavOptions?) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -111,7 +111,7 @@ private fun ShowListState(
                                 .aspectRatio(2 / 1f)
                                 .clickable {
                                     onItemClick(
-                                        upcominglist[page].type,
+                                        upcominglist[page].media_type,
                                         upcominglist[page].id.toString(),
                                         null
                                     )

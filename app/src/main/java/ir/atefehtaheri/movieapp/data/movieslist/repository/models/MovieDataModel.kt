@@ -1,6 +1,7 @@
 package ir.atefehtaheri.movieapp.data.movieslist.repository.models
 
 import ir.atefehtaheri.movieapp.core.common.models.MediaType
+import ir.atefehtaheri.movieapp.core.database.entities.MovieEntity
 import ir.atefehtaheri.movieapp.data.movieslist.remote.models.Movie
 import ir.atefehtaheri.movieapp.data.movieslist.remote.models.MoviesDto
 
@@ -16,7 +17,7 @@ data class MovieDataModel(
     val poster_path: String?,
     val release_date: String,
     val vote_average: Double,
-    val type:String
+    val media_type:MediaType
 )
 
 
@@ -29,15 +30,15 @@ data class MovieDataModel(
 //
 //}
 
-fun MoviesDto.asMovieListDataModel(): List<MovieDataModel> {
+fun MoviesDto.asMovieListDataModel(media_type:MediaType.Movie): List<MovieDataModel> {
     return this.results.map {
-            it.asMovieDataModel()
+            it.asMovieDataModel(media_type)
         }
 }
 
 
 
-fun Movie.asMovieDataModel(): MovieDataModel {
+fun Movie.asMovieDataModel(media_type:MediaType.Movie): MovieDataModel {
     return MovieDataModel(
         backdrop_path = backdrop_path,
         id = id,
@@ -46,6 +47,20 @@ fun Movie.asMovieDataModel(): MovieDataModel {
         poster_path = poster_path,
         release_date = release_date,
         vote_average = vote_average,
-        type= MediaType.Movie.name
+        media_type= media_type
     )
 }
+//
+//
+//fun MovieEntity.asMovieDataModel(): MovieDataModel{
+//    return MovieDataModel(
+//        backdrop_path =backdrop_path,
+//        id =id,
+//        title =title,
+//        overview =overview,
+//        poster_path =poster_path,
+//        release_date =release_date,
+//        vote_average =vote_average,
+//        type = MediaType.Movie.name
+//    )
+//}
