@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import ir.atefehtaheri.movieapp.core.common.models.MediaType
 import ir.atefehtaheri.movieapp.feature.homescreen.HomeScreen
 
 
@@ -11,22 +12,18 @@ const val HomeScreenRoute = "homescreen_route"
 
 
 fun NavController.navigateToHomeScreen(navOptions: NavOptions? = null) {
-    this.navigate(HomeScreenRoute, navOptions)
+    this.navigate("home", navOptions)
 }
 
 fun NavGraphBuilder.homeScreenDestination(
-//    navToUpcoming :  (NavOptions?) -> Unit,
-//    navToNowPlaying :  (NavOptions?) -> Unit,
-//    navToTopRated :  (NavOptions?) -> Unit,
-    onItemClick:(String, String, NavOptions?) -> Unit
-   ) {
+    navToShowList: (MediaType.Movie, MediaType.TvShow, NavOptions?) -> Unit,
+    onItemClick: (MediaType, String, NavOptions?) -> Unit
+) {
 
     composable(route = HomeScreenRoute) {
-        HomeScreen (
-//            navToUpcoming,
-//            navToNowPlaying ,
-//            navToTopRated,
-            onItemClick= onItemClick
+        HomeScreen(
+            navToShowList = navToShowList,
+            onItemClick = onItemClick
         )
     }
 }

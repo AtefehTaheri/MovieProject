@@ -1,5 +1,6 @@
-package com.omidtaheri.template.ui
+package ir.atefehtaheri.movieapp.ui
 
+import android.util.Log
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
@@ -15,7 +16,6 @@ import ir.atefehtaheri.movieapp.core.common.models.AppContentType
 import ir.atefehtaheri.movieapp.core.common.models.AppNavigationType
 import ir.atefehtaheri.movieapp.feature.homescreen.navigation.HomeScreenRoute
 import ir.atefehtaheri.movieapp.feature.homescreen.navigation.navigateToHomeScreen
-import ir.atefehtaheri.movieapp.feature.searchscreen.navigation.navigateToSearchScreen
 import ir.atefehtaheri.movieapp.navigation.TopLevelDestination
 
 
@@ -89,18 +89,16 @@ class MovieAppState(
 
         val topLevelNavOptions = navOptions {
             popUpTo(navController.graph.findStartDestination().id) {
-                saveState = true
-            }
-            launchSingleTop = true
-            restoreState = true
-        }
 
+                inclusive = true
+            }
+        }
         when (topLevelDestination) {
             TopLevelDestination.HOME -> {
-                navController.navigateToHomeScreen()
+                navController.navigateToHomeScreen(topLevelNavOptions)
             }
             TopLevelDestination.SEARCH -> {
-                navController.navigateToSearchScreen()
+//                navController.navigateToSearchScreen()
             }
             TopLevelDestination.FAVORITE -> {}
         }

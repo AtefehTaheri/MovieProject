@@ -27,16 +27,12 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabPosition
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,6 +51,8 @@ import ir.atefehtaheri.movieapp.core.designsystem.component.ShowError
 import ir.atefehtaheri.movieapp.data.detailitem.repository.models.TvShowDetailDataModel
 import ir.atefehtaheri.movieapp.feature.detailscreen.DetailScreenViewModel
 import ir.atefehtaheri.movieapp.feature.detailscreen.uistate.DetailState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun DetailTvShow(
@@ -65,7 +63,7 @@ internal fun DetailTvShow(
     if (detailState.errorMessage != null) {
         ShowError(detailState.errorMessage!!)
     } else {
-        DetailTvShowScreen(modifier,detailState)
+        DetailTvShowScreen(modifier, detailState)
     }
 
 
@@ -74,11 +72,12 @@ internal fun DetailTvShow(
 @Composable
 private fun DetailTvShowScreen(
     modifier: Modifier = Modifier,
-    detailState: DetailState ){
+    detailState: DetailState
+) {
 
     when {
         detailState.loading -> LoadingState(modifier)
-        else -> ShowListState(modifier,detailState.tvShowDetailDataModel!!)
+        else -> ShowListState(modifier, detailState.tvShowDetailDataModel!!)
     }
 }
 
@@ -129,12 +128,13 @@ private fun ShowListState(
 }
 
 @Composable
-private fun TvShowMetadataView(tvShowDetailDataModel: TvShowDetailDataModel){
+private fun TvShowMetadataView(tvShowDetailDataModel: TvShowDetailDataModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(20.dp),
-        verticalAlignment = Alignment.CenterVertically) {
+        verticalAlignment = Alignment.CenterVertically
+    ) {
 
         Column(
             modifier = Modifier.weight(1f),
@@ -201,19 +201,29 @@ private fun TvShowMetadataView(tvShowDetailDataModel: TvShowDetailDataModel){
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun InformationTabView(scrollState: ScrollState,tvShowDetailDataModel: TvShowDetailDataModel){
+private fun InformationTabView(
+    scrollState: ScrollState,
+    tvShowDetailDataModel: TvShowDetailDataModel
+) {
 
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
-    val pagerState = rememberPagerState { InformationTvTabs.entries.size }
 
-    LaunchedEffect(key1 = selectedTabIndex) {
-        pagerState.animateScrollToPage(selectedTabIndex)
-    }
+    val coroutineScope: CoroutineScope = rememberCoroutineScope()
+    val tabs = remember { InformationTvTabs.entries }
+    val pagerState = rememberPagerState(pageCount = tabs::size)
+    val selectedTabIndex = pagerState.currentPage
 
-    LaunchedEffect(key1 = pagerState.currentPage, pagerState.isScrollInProgress) {
-        if (!pagerState.isScrollInProgress)
-            selectedTabIndex = pagerState.currentPage
-    }
+
+//    var selectedTabIndex by remember { mutableIntStateOf(0) }
+//    val pagerState = rememberPagerState { InformationTvTabs.entries.size }
+//
+//    LaunchedEffect(key1 = selectedTabIndex) {
+//        pagerState.animateScrollToPage(selectedTabIndex)
+//    }
+//
+//    LaunchedEffect(key1 = pagerState.currentPage, pagerState.isScrollInProgress) {
+//        if (!pagerState.isScrollInProgress)
+//            selectedTabIndex = pagerState.currentPage
+//    }
 
     TabRow(
         modifier = Modifier
@@ -227,7 +237,7 @@ private fun InformationTabView(scrollState: ScrollState,tvShowDetailDataModel: T
             Box {}
         }
     ) {
-        InformationTvTabs.entries.forEachIndexed { index, currentTab ->
+        tabs.forEachIndexed { index, currentTab ->
             Tab(
                 modifier = if (selectedTabIndex == index) Modifier
                     .clip(RoundedCornerShape(50))
@@ -243,7 +253,9 @@ private fun InformationTabView(scrollState: ScrollState,tvShowDetailDataModel: T
                 selectedContentColor = MaterialTheme.colorScheme.scrim,
                 unselectedContentColor = MaterialTheme.colorScheme.outline,
                 onClick = {
-                    selectedTabIndex = index
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(index)
+                    }
                 },
                 text = {
                     Text(

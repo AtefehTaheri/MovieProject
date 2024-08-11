@@ -18,8 +18,6 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.omidtaheri.template.ui.MovieAppState
-import com.omidtaheri.template.ui.rememberMyAppState
 import ir.atefehtaheri.movieapp.core.common.models.AppNavigationType
 import ir.atefehtaheri.movieapp.navigation.MovieBottomBar
 import ir.atefehtaheri.movieapp.navigation.MovieNavHost
@@ -34,7 +32,7 @@ fun MovieApp(
 ) {
 
     when (appState.navigationType) {
-        AppNavigationType.BOTTOM_NAVIGATION -> {
+         AppNavigationType.BOTTOM_NAVIGATION , AppNavigationType.PERMANENT_NAVIGATION_DRAWER -> {
             MovieScaffold(
                 appState,
                 true,
@@ -48,9 +46,12 @@ fun MovieApp(
             )
         }
 
-        AppNavigationType.PERMANENT_NAVIGATION_DRAWER -> {
-
-        }
+//        AppNavigationType.PERMANENT_NAVIGATION_DRAWER -> {
+//            MovieScaffold(
+//                appState,
+//                true,
+//            )
+//        }
     }
 
 
@@ -62,7 +63,6 @@ private fun MovieScaffold(
     appState: MovieAppState,
     shouldShowBottomBar: Boolean,
 ) {
-
     Scaffold(
         containerColor = Color.Transparent,
         contentColor = MaterialTheme.colorScheme.onBackground,
@@ -87,7 +87,6 @@ private fun MovieScaffold(
                         WindowInsetsSides.Horizontal,
                     ),
                 )
-
         ) {
             if (!shouldShowBottomBar) {
                 MovieNavRail(

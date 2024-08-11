@@ -11,7 +11,7 @@ data class TvShowDetailDataModel(
     val genres: List<String>,
     val id: Int,
     val images: List<String>,
-    val last_air_date: String,
+    val last_air_date: String?,
     val last_episode_to_air: Episode,
     val name: String,
     val next_episode_to_air: Episode?,
