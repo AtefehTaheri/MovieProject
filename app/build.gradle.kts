@@ -109,4 +109,16 @@ dependencies {
     implementation(libs.material.icons.core)
     implementation(libs.material.icons.extended)
 
+
+    implementation(libs.room.runtime)
+    annotationProcessor(libs.room.compiler)
+    kapt(libs.room.compiler)
+    implementation(libs.room.ktx)
+    implementation(libs.room.paging)
+
+
+    implementation(libs.paging.runtime)
+    testImplementation(libs.paging.common)
+    implementation(libs.paging.compose)
+
 }

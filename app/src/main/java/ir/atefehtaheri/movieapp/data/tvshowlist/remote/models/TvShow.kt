@@ -1,5 +1,9 @@
 package ir.atefehtaheri.movieapp.data.tvshowlist.remote.models
 
+import ir.atefehtaheri.movieapp.core.common.models.MediaType
+import ir.atefehtaheri.movieapp.core.database.entities.MovieEntity
+import ir.atefehtaheri.movieapp.data.movieslist.remote.models.Movie
+
 
 data class TvShow(
     val adult: Boolean,
@@ -17,3 +21,16 @@ data class TvShow(
     val vote_count: Int
 )
 
+
+fun TvShow.asMovieEntity(mediaType: MediaType.TvShow): MovieEntity {
+    return MovieEntity(
+        backdrop_path =backdrop_path,
+        id =id,
+        title =name,
+        overview =overview,
+        poster_path =poster_path,
+        release_date =first_air_date,
+        vote_average =vote_average,
+        type_movie = mediaType.mediaType
+    )
+}

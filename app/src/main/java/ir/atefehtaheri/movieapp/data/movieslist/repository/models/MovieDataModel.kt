@@ -50,17 +50,17 @@ fun Movie.asMovieDataModel(media_type:MediaType.Movie): MovieDataModel {
         media_type= media_type
     )
 }
-//
-//
-//fun MovieEntity.asMovieDataModel(): MovieDataModel{
-//    return MovieDataModel(
-//        backdrop_path =backdrop_path,
-//        id =id,
-//        title =title,
-//        overview =overview,
-//        poster_path =poster_path,
-//        release_date =release_date,
-//        vote_average =vote_average,
-//        type = MediaType.Movie.name
-//    )
-//}
+
+
+fun MovieEntity.asMovieDataModel(media_type: MediaType): MovieDataModel{
+    return MovieDataModel(
+        backdrop_path =backdrop_path,
+        id =id,
+        title =title,
+        overview =overview,
+        poster_path =poster_path,
+        release_date =release_date,
+        vote_average =vote_average,
+        media_type = media_type
+    )
+}
