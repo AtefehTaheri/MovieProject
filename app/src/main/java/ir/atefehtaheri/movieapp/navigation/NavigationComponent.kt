@@ -19,9 +19,6 @@ private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLev
     } ?: false
 
 
-
-
-
 @Composable
 fun MovieBottomBar(
     navItems: List<TopLevelDestination>,
@@ -37,7 +34,11 @@ fun MovieBottomBar(
             val selected = currentDestination.isTopLevelDestinationInHierarchy(destination)
             MovieNavigationBarItem(
                 selected = selected,
-                onClick = { onNavigateToDestination(destination) },
+                onClick = {
+                    if (currentDestination?.route != destination.route) {
+                        onNavigateToDestination(destination)
+                    }
+                },
                 icon = {
                     Icon(
                         imageVector = destination.unselectedIcon,
@@ -56,7 +57,6 @@ fun MovieBottomBar(
         }
     }
 }
-
 
 
 @Composable

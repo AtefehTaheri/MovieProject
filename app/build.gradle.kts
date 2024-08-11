@@ -121,4 +121,6 @@ dependencies {
     testImplementation(libs.paging.common)
     implementation(libs.paging.compose)
 
+    implementation(libs.accompanist.pager)
+
 }

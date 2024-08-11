@@ -1,5 +1,6 @@
 package ir.atefehtaheri.movieapp.feature.homescreen
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,7 +17,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,12 +35,9 @@ import ir.atefehtaheri.movieapp.feature.homescreen.uistate.errorMessage
 
 @Composable
 fun HomeScreen(
-    navToUpcoming: (NavOptions?) -> Unit={},
-    navToNowPlaying: (NavOptions?) -> Unit = {},
-    navToTopRated: (NavOptions?) -> Unit = {},
+    navToShowList: (MediaType.Movie, MediaType.TvShow, NavOptions?) -> Unit,
     onItemClick: (MediaType, String, NavOptions?) -> Unit,
     homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
-
 ) {
     val scrollstate = rememberScrollState()
     val homeUiState by homeScreenViewModel.uiState.collectAsStateWithLifecycle()
@@ -57,16 +54,26 @@ fun HomeScreen(
                 .background(MaterialTheme.colorScheme.primaryContainer)
         ) {
 
-            Header(
-                R.string.upcoming_movies
-            ) { navToUpcoming(null) }
+            Header(R.string.upcoming_movies) {
+                navToShowList(
+                    MediaType.Movie.UPCOMING,
+                    MediaType.TvShow.Airing,
+                    null
+                )
+            }
             UpcomingPager(
                 onItemClick,
                 homeUiState.movies.get(MediaType.Movie.UPCOMING)!!
             )
             Header(
                 R.string.now_playing
-            ) { navToNowPlaying(null) }
+            ) {
+                navToShowList(
+                    MediaType.Movie.NOW_PLAYING,
+                    MediaType.TvShow.Airing,
+                    null
+                )
+            }
             HorizontalItemList(
                 homeUiState.movies.get(MediaType.Movie.NOW_PLAYING)!!,
                 MediaType.Movie.NOW_PLAYING,
@@ -77,11 +84,16 @@ fun HomeScreen(
                 MediaType.TvShow.Airing,
                 onItemClick,
 
-            )
+                )
             Header(
                 R.string.top_rated
-            )
-            { navToTopRated(null) }
+            ) {
+                navToShowList(
+                    MediaType.Movie.TOP_RATED,
+                    MediaType.TvShow.TOP_RATED,
+                    null
+                )
+            }
 
             HorizontalItemList(
                 homeUiState.movies.get(MediaType.Movie.TOP_RATED)!!,
@@ -102,7 +114,7 @@ fun HomeScreen(
 @Composable
 fun Header(
     @StringRes title: Int,
-    navToShowList: (NavOptions?) -> Unit = {}
+    navToShowList: () -> Unit
 ) {
 
     Row(
@@ -127,7 +139,7 @@ fun Header(
         )
 
         Text(
-            modifier = Modifier.clickable { navToShowList(null) },
+            modifier = Modifier.clickable { navToShowList() },
             text = stringResource(id = R.string.showall),
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.secondary,

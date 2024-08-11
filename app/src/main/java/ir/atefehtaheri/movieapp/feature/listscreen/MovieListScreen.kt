@@ -18,15 +18,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabPosition
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,24 +39,31 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import ir.atefehtaheri.movieapp.core.common.models.MediaType
 import ir.atefehtaheri.movieapp.core.designsystem.component.ShowError
 import ir.atefehtaheri.movieapp.data.movieslist.repository.models.MovieDataModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 
 @Composable
 internal fun MovieListRoute(
-    onItemClick: (MediaType, id:String, NavOptions?) -> Unit,
+    onItemClick: (MediaType, id: String, NavOptions?) -> Unit,
     modifier: Modifier = Modifier,
     movieViewModel: MovieViewModel = hiltViewModel(),
     mediaTypeMovie: MediaType.Movie,
     mediaTypeTvShow: MediaType.TvShow
 
 ) {
-    movieViewModel.getDataMovie(mediaTypeMovie)
-    movieViewModel.getDataTvShow(mediaTypeTvShow)
+    LaunchedEffect(key1 = Unit) {
+        movieViewModel.getDataMovie(mediaTypeMovie)
+        movieViewModel.getDataTvShow(mediaTypeTvShow)
+    }
+
     val uiState by movieViewModel.uiState.collectAsStateWithLifecycle()
     val movies = uiState.movies.collectAsLazyPagingItems()
     val tvShows = uiState.tvShows.collectAsLazyPagingItems()
-
-    MovieListScreen(movies,tvShows, onItemClick,modifier)
+    when (mediaTypeMovie) {
+        MediaType.Movie.UPCOMING -> UpcomingListScreen(movies, onItemClick, modifier)
+        else -> MovieListScreen(movies, tvShows, onItemClick, modifier)
+    }
 }
 
 @Composable
@@ -66,7 +71,8 @@ private fun MovieListScreen(
     movies: LazyPagingItems<MovieDataModel>,
     tvShows: LazyPagingItems<MovieDataModel>,
     onItemClick: (MediaType, String, NavOptions?) -> Unit,
-    modifier: Modifier = Modifier ) {
+    modifier: Modifier = Modifier
+) {
 
     when {
         movies.loadState.refresh is LoadState.Error -> ShowError(
@@ -80,7 +86,7 @@ private fun MovieListScreen(
         movies.loadState.refresh is LoadState.Loading -> LoadingState()
         tvShows.loadState.refresh is LoadState.Loading -> LoadingState()
 
-        else -> ShowListScreen(movies, tvShows, onItemClick,modifier)
+        else -> ShowListScreen(movies, tvShows, onItemClick, modifier)
     }
 }
 
@@ -107,17 +113,12 @@ private fun ShowListScreen(
     onItemClick: (MediaType, String, NavOptions?) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
-    val pagerState = rememberPagerState { InformationTabs.entries.size }
 
-    LaunchedEffect(key1 = selectedTabIndex) {
-        pagerState.animateScrollToPage(selectedTabIndex)
-    }
 
-    LaunchedEffect(key1 = pagerState.currentPage, pagerState.isScrollInProgress) {
-        if (!pagerState.isScrollInProgress)
-            selectedTabIndex = pagerState.currentPage
-    }
+    val coroutineScope: CoroutineScope = rememberCoroutineScope()
+    val tabs = remember { InformationTabs.entries }
+    val pagerState = rememberPagerState(pageCount = tabs::size)
+    val selectedTabIndex = pagerState.currentPage
 
     Box(
         modifier = modifier
@@ -149,11 +150,11 @@ private fun ShowListScreen(
                     .fillMaxWidth()
                     .padding(top = 15.dp, start = 15.dp, end = 15.dp, bottom = 15.dp)
                     .clip(RoundedCornerShape(90)),
-                indicator = { tabPositions: List<TabPosition> ->
+                indicator = { _ ->
                     Box {}
                 }
             ) {
-                InformationTabs.entries.forEachIndexed { index, currentTab ->
+                tabs.forEachIndexed { index, currentTab ->
                     Tab(
                         modifier = if (selectedTabIndex == index) Modifier
                             .clip(RoundedCornerShape(50))
@@ -171,7 +172,9 @@ private fun ShowListScreen(
                         selectedContentColor = MaterialTheme.colorScheme.primaryContainer,
                         unselectedContentColor = MaterialTheme.colorScheme.outline,
                         onClick = {
-                            selectedTabIndex = index
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(index)
+                            }
                         },
                         text = {
                             Text(
@@ -231,7 +234,8 @@ private fun PageContent_Movie(
                 }
             }
         }
-    }}
+    }
+}
 
 
 @Composable

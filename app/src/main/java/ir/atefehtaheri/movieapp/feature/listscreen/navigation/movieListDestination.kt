@@ -9,7 +9,7 @@ import androidx.navigation.navArgument
 import ir.atefehtaheri.movieapp.core.common.models.MediaType
 import ir.atefehtaheri.movieapp.feature.listscreen.MovieListRoute
 
-const val UpcomingListRoute =
+const val MovieListRoute =
     "movielist_route?mediaTypeTvshow={mediaTypeTvshow}&mediaTypeMovie={mediaTypeMovie}"
 
 fun NavController.navigateToMovieList(
@@ -18,7 +18,7 @@ fun NavController.navigateToMovieList(
     navOptions: NavOptions? = null
 ) {
     this.navigate(
-        UpcomingListRoute
+        MovieListRoute
             .replace("{mediaTypeTvshow}", mediaTypeTvshow.mediaType)
             .replace("{mediaTypeMovie}", mediaTypeMovie.mediaType), navOptions
     )
@@ -28,7 +28,7 @@ fun NavGraphBuilder.movieListDestination(
     onItemClick: (MediaType, String, NavOptions?) -> Unit
 
 ) {
-    composable(route = UpcomingListRoute,
+    composable(route = MovieListRoute,
         arguments = listOf(
             navArgument("mediaTypeTvshow") {
                 type = NavType.StringType

@@ -12,22 +12,18 @@ const val HomeScreenRoute = "homescreen_route"
 
 
 fun NavController.navigateToHomeScreen(navOptions: NavOptions? = null) {
-    this.navigate(HomeScreenRoute, navOptions)
+    this.navigate("home", navOptions)
 }
 
 fun NavGraphBuilder.homeScreenDestination(
-//    navToUpcoming :  (NavOptions?) -> Unit,
-//    navToNowPlaying :  (NavOptions?) -> Unit,
-//    navToTopRated :  (NavOptions?) -> Unit,
-    onItemClick:(MediaType, String, NavOptions?) -> Unit
-   ) {
+    navToShowList: (MediaType.Movie, MediaType.TvShow, NavOptions?) -> Unit,
+    onItemClick: (MediaType, String, NavOptions?) -> Unit
+) {
 
     composable(route = HomeScreenRoute) {
-        HomeScreen (
-//            navToUpcoming,
-//            navToNowPlaying ,
-//            navToTopRated,
-            onItemClick= onItemClick
+        HomeScreen(
+            navToShowList = navToShowList,
+            onItemClick = onItemClick
         )
     }
 }

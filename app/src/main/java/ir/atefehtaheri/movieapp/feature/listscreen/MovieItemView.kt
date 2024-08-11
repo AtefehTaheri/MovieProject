@@ -34,6 +34,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavOptions
+import androidx.navigation.navOptions
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import ir.atefehtaheri.movieapp.R
@@ -52,10 +53,13 @@ internal fun MovieItemView(
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(horizontal = 20.dp)
             .clickable {
                 onItemClick(movieDataModel.media_type,
                     movieDataModel.id.toString(),
-                    null)
+                    navOptions {
+                        restoreState = true
+                    })
             },
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -67,6 +71,7 @@ internal fun MovieItemView(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+
                 .aspectRatio(1f / 0.4f)
                 .padding(10.dp)
 
@@ -88,7 +93,7 @@ internal fun MovieItemView(
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 30.dp)
+                        .padding(horizontal = 10.dp)
                 )
                 Row (modifier = Modifier
                     .fillMaxWidth()

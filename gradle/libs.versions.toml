@@ -22,7 +22,7 @@ material-icons-core_version = "1.3.0"
 material-icons-extended_version = "1.3.0"
 room_version = "2.6.1"
 paging_version = "3.3.0"
-
+accompanist-pager_version="0.30.1"
 
 
 
@@ -79,6 +79,7 @@ paging-rxjava2 = { group = "androidx.paging", name = "paging-rxjava2", version.r
 paging-rxjava3 = { group = "androidx.paging", name = "paging-rxjava3", version.ref = "paging_version" }
 paging-guava = { group = "androidx.paging", name = "paging-guava", version.ref = "paging_version" }
 paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging_version" }
+accompanist-pager = { group = "com.google.accompanist", name = "accompanist-pager", version.ref = "accompanist-pager_version" }
 
 
 

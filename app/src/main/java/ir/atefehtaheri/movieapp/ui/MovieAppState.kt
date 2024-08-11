@@ -1,5 +1,6 @@
-package com.omidtaheri.template.ui
+package ir.atefehtaheri.movieapp.ui
 
+import android.util.Log
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
@@ -88,15 +89,13 @@ class MovieAppState(
 
         val topLevelNavOptions = navOptions {
             popUpTo(navController.graph.findStartDestination().id) {
-                saveState = true
-            }
-            launchSingleTop = true
-            restoreState = true
-        }
 
+                inclusive = true
+            }
+        }
         when (topLevelDestination) {
             TopLevelDestination.HOME -> {
-                navController.navigateToHomeScreen()
+                navController.navigateToHomeScreen(topLevelNavOptions)
             }
             TopLevelDestination.SEARCH -> {
 //                navController.navigateToSearchScreen()

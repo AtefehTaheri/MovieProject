@@ -1,6 +1,7 @@
 package ir.atefehtaheri.movieapp.feature.detailscreen
 
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import ir.atefehtaheri.movieapp.core.common.models.MediaType
@@ -16,6 +17,7 @@ internal fun DetailScreen(
     detailScreenViewModel: DetailScreenViewModel = hiltViewModel()
 
 ) {
+
     when (type) {
 
         Type.Movie ->  {
