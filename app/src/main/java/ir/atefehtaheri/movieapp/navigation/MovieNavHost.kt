@@ -8,6 +8,7 @@ import ir.atefehtaheri.movieapp.feature.detailscreen.navigate.detailscreenDestin
 import ir.atefehtaheri.movieapp.feature.detailscreen.navigate.navigateToDetailScreen
 import ir.atefehtaheri.movieapp.feature.homescreen.navigation.HomeScreenRoute
 import ir.atefehtaheri.movieapp.feature.homescreen.navigation.homeScreenDestination
+import ir.atefehtaheri.movieapp.feature.upcominglistScreen.movieListDestination
 
 @Composable
 fun MovieNavHost(
@@ -24,6 +25,7 @@ fun MovieNavHost(
         homeScreenDestination(onItemClick= navController::navigateToDetailScreen)
 
         detailscreenDestination()
+        movieListDestination(onItemClick= navController::navigateToDetailScreen)
     }
 
 }

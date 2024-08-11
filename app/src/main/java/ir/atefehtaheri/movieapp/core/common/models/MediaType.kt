@@ -5,20 +5,23 @@ sealed interface MediaType {
         UPCOMING(UPCOMING_MEDIA),
         TOP_RATED(TOP_RATED_MOVIE_MEDIA),
         NOW_PLAYING(NOW_PLAYING_MEDIA);
-
-        companion object {
-            val name = "Movie"
-        }
     }
 
     enum class TvShow(val mediaType: String) : MediaType {
         TOP_RATED(TOP_RATED_TVSHOW_MEDIA),
         Airing(Airing_MEDIA);
-
-        companion object {
-            val name = "TvShow"
-        }
     }
+
+
+    val type : Type
+        get() = when (this) {
+            is Movie -> Type.Movie
+            is TvShow -> Type.TvShow
+        }
+}
+enum class Type{
+    Movie,
+    TvShow
 }
 
 private const val UPCOMING_MEDIA = "upcoming"
