@@ -34,6 +34,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,6 +54,8 @@ import ir.atefehtaheri.movieapp.core.designsystem.component.ShowError
 import ir.atefehtaheri.movieapp.data.detailitem.repository.models.MovieDetailDataModel
 import ir.atefehtaheri.movieapp.feature.detailscreen.DetailScreenViewModel
 import ir.atefehtaheri.movieapp.feature.detailscreen.uistate.DetailState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun DetailMovie(
@@ -203,18 +206,23 @@ private fun MovieMetadataView(movieDetailDataModel: MovieDetailDataModel) {
 @Composable
 private fun InformationTabView(scrollState: ScrollState, movieDetailDataModel: MovieDetailDataModel) {
 
+    val coroutineScope: CoroutineScope = rememberCoroutineScope()
+    val tabs = remember { InformationTabs.entries }
+    val pagerState = rememberPagerState(pageCount = tabs::size)
+    val selectedTabIndex = pagerState.currentPage
 
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
-    val pagerState = rememberPagerState { InformationTabs.entries.size }
 
-    LaunchedEffect(key1 = selectedTabIndex) {
-        pagerState.animateScrollToPage(selectedTabIndex)
-    }
-
-    LaunchedEffect(key1 = pagerState.currentPage, pagerState.isScrollInProgress) {
-        if (!pagerState.isScrollInProgress)
-            selectedTabIndex = pagerState.currentPage
-    }
+//    var selectedTabIndex by remember { mutableIntStateOf(0) }
+//    val pagerState = rememberPagerState { InformationTabs.entries.size }
+//
+//    LaunchedEffect(key1 = selectedTabIndex) {
+//        pagerState.animateScrollToPage(selectedTabIndex)
+//    }
+//
+//    LaunchedEffect(key1 = pagerState.currentPage, pagerState.isScrollInProgress) {
+//        if (!pagerState.isScrollInProgress)
+//            selectedTabIndex = pagerState.currentPage
+//    }
 
 
     TabRow(
@@ -229,7 +237,7 @@ private fun InformationTabView(scrollState: ScrollState, movieDetailDataModel: M
             Box {}
         }
     ) {
-        InformationTabs.entries.forEachIndexed { index, currentTab ->
+        tabs.forEachIndexed { index, currentTab ->
             Tab(
                 modifier = if (selectedTabIndex == index) Modifier
                     .clip(RoundedCornerShape(50))
@@ -246,7 +254,9 @@ private fun InformationTabView(scrollState: ScrollState, movieDetailDataModel: M
                 unselectedContentColor = MaterialTheme.colorScheme.outline,
 
                 onClick = {
-                    selectedTabIndex = index
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(index)
+                    }
                 },
                 text = {
                     Text(

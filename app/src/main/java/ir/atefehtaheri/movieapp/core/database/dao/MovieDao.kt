@@ -11,7 +11,7 @@ import ir.atefehtaheri.movieapp.core.database.entities.MovieEntity
 interface MovieDao {
 
     @Insert
-    fun insertAllMovieEntity(movies:List<MovieEntity>)
+    fun insertAllMovieEntity(movies:List<MovieEntity>): LongArray
 
     @Query("SELECT * FROM MovieEntity WHERE type_movie = :mediaType")
     fun pagingSourceMovieEntity(mediaType: String):PagingSource<Int, MovieEntity>

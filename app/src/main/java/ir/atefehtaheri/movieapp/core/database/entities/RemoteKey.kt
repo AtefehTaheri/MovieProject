@@ -7,9 +7,10 @@ import androidx.room.PrimaryKey
     tableName = "remote_keys"
 )
 data class RemoteKey(
-    @PrimaryKey(autoGenerate = false)
-    val id: String,
+    @PrimaryKey
+    val id: Int,
     val next_page: Int?,
     val prev_page: Int?,
+    val mediaType:String
 
 )

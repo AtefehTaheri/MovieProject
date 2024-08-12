@@ -17,8 +17,8 @@ class NetworkTvShowsDatasource @Inject constructor(
 
 
         val result = when (mediaType) {
-            MediaType.TvShow.TOP_RATED -> tvShowApi.getTopRatedTvShowList()
-            MediaType.TvShow.Airing -> tvShowApi.getTvAiringList()
+            MediaType.TvShow.TOP_RATED -> tvShowApi.getTopRatedTvShowList(page=page)
+            MediaType.TvShow.Airing -> tvShowApi.getTvAiringList(page=page)
         }
 
         return when (result) {
