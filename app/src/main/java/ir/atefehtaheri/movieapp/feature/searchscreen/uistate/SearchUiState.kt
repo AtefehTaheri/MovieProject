@@ -4,7 +4,6 @@ import androidx.paging.PagingData
 import ir.atefehtaheri.movieapp.data.movieslist.repository.models.MovieDataModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.flow
 
 data class SearchUiState(
     val query: String = "",

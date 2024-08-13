@@ -1,5 +1,6 @@
 package ir.atefehtaheri.movieapp.feature.searchscreen
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -23,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ComposableOpenTarget
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -125,7 +127,7 @@ fun SearchScreen(
             },
             trailingIcon = {
 
-                IconButton(onClick = {  softwareKeyboardController?.hide() }) {
+                IconButton(onClick = { softwareKeyboardController?.hide() }) {
                     Icon(
                         Icons.Filled.Search,
                         tint = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -136,9 +138,11 @@ fun SearchScreen(
             }
         )
         AnimatedVisibility(visible = !isSearching) {
-            Column(Modifier.fillMaxSize(),
+            Column(
+                Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center) {
+                verticalArrangement = Arrangement.Center
+            ) {
 
                 Image(
                     painter = painterResource(id = R.drawable.searchicon),
@@ -168,13 +172,21 @@ fun SearchScreen(
                 tvShows.loadState.refresh is LoadState.Error -> ShowError(
                     (tvShows.loadState.refresh as LoadState.Error).error.message ?: ""
                 )
-                movies.loadState.refresh is LoadState.Loading -> LoadingState(modifier)
-                tvShows.loadState.refresh is LoadState.Loading -> LoadingState(modifier)
+
+                movies.isLoading() -> LoadingState(modifier)
+                tvShows.isLoading() -> LoadingState(modifier)
 
                 else -> ShowListScreen(movies, tvShows, onItemClick, modifier)
             }
         }
     }
+}
+
+@Composable
+fun <T : Any> LazyPagingItems<T>.isLoading(): Boolean {
+    return this.loadState.refresh is LoadState.Loading ||
+            (this.loadState.append !is LoadState.Loading && this.itemCount == 0 &&
+                    !this.loadState.append.endOfPaginationReached)
 }
 
 

@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -220,6 +219,7 @@ private fun PageContent_Movie(
     ) {
 
         AnimatedVisibility(visible = movies.itemCount != 0) {
+
             LazyColumn(
                 modifier = Modifier, state = listState,
                 verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -249,6 +249,7 @@ private fun PageContent_Movie(
             }
         }
         AnimatedVisibility(visible = movies.itemCount == 0) {
+
             Column(Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center) {
