@@ -32,7 +32,11 @@
     <string name="episode_count">episode count:</string>
     <string name="episode_number">episode number:</string>
     <string name="season_number">season number:</string>
-
-
+    <string name="text_placeholder">Enter Movie Name</string>
+    <string name="not_found_image">Not Found</string>
+    <string name="not_found_movie">Movie not found</string>
+    <string name="not_found_tvshow">TvShow not found</string>
+    <string name="search_button">Search Button</string>
+    <string name="empty_state_search">Search for Movies and TvShow</string>
 
 </resources>

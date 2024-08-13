@@ -1,14 +1,14 @@
-package ir.atefehtaheri.movieapp.feature.listscreen.uistate
+package ir.atefehtaheri.movieapp.feature.searchscreen.uistate
 
 import androidx.paging.PagingData
-import ir.atefehtaheri.movieapp.core.common.models.MediaType
 import ir.atefehtaheri.movieapp.data.movieslist.repository.models.MovieDataModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 
-data class ListUiState(
+data class SearchUiState(
+    val query: String = "",
+    val isSearching: Boolean = false,
     val movies: Flow<PagingData<MovieDataModel>> = emptyFlow(),
-    val tvShows: Flow<PagingData<MovieDataModel>> =emptyFlow()
+    val tvShows: Flow<PagingData<MovieDataModel>> = emptyFlow()
 )

@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import ir.atefehtaheri.movieapp.R
 import ir.atefehtaheri.movieapp.core.designsystem.icon.MovieIcons
 import ir.atefehtaheri.movieapp.feature.homescreen.navigation.HomeScreenRoute
+import ir.atefehtaheri.movieapp.feature.searchscreen.navigation.SearchScreenRoute
 
 
 enum class TopLevelDestination(
@@ -25,7 +26,7 @@ enum class TopLevelDestination(
         unselectedIcon = MovieIcons.SearchBorder,
         iconTextId = R.string.search,
         titleTextId = R.string.search,
-        route =" HomeScreenRoute"
+        route = SearchScreenRoute
     ),
     FAVORITE(
         selectedIcon = MovieIcons.Favorite,

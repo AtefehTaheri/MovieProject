@@ -8,6 +8,9 @@ import ir.atefehtaheri.movieapp.feature.detailscreen.navigate.detailscreenDestin
 import ir.atefehtaheri.movieapp.feature.detailscreen.navigate.navigateToDetailScreen
 import ir.atefehtaheri.movieapp.feature.homescreen.navigation.HomeScreenRoute
 import ir.atefehtaheri.movieapp.feature.homescreen.navigation.homeScreenDestination
+import ir.atefehtaheri.movieapp.feature.searchscreen.navigation.SearchScreenRoute
+import ir.atefehtaheri.movieapp.feature.searchscreen.navigation.searchScreenDestination
+import ir.atefehtaheri.movieapp.feature.upcominglistScreen.MovieListRoute
 import ir.atefehtaheri.movieapp.feature.upcominglistScreen.movieListDestination
 import ir.atefehtaheri.movieapp.feature.upcominglistScreen.navigateToMovieList
 import ir.atefehtaheri.movieapp.ui.MovieAppState
@@ -32,6 +35,10 @@ fun MovieNavHost(
                 onItemClick = navController::navigateToDetailScreen
             )
             detailscreenDestination()
+            movieListDestination(onItemClick = navController::navigateToDetailScreen)
+        }
+        navigation(startDestination = SearchScreenRoute, route = "search") {
+            searchScreenDestination(onItemClick = navController::navigateToDetailScreen)
             movieListDestination(onItemClick = navController::navigateToDetailScreen)
         }
 
