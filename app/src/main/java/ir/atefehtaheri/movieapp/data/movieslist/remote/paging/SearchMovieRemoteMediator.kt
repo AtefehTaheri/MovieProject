@@ -1,4 +1,4 @@
-package ir.atefehtaheri.movieapp.data.tvshowlist.remote.paging
+package ir.atefehtaheri.movieapp.data.movieslist.remote.paging
 
 import android.util.Log
 import androidx.paging.ExperimentalPagingApi
@@ -6,20 +6,21 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import ir.atefehtaheri.movieapp.core.common.models.MediaType
 import ir.atefehtaheri.movieapp.core.common.models.ResultStatus
+import ir.atefehtaheri.movieapp.core.common.models.Type
 import ir.atefehtaheri.movieapp.core.database.MovieDatabase
 import ir.atefehtaheri.movieapp.core.database.entities.MovieEntity
 import ir.atefehtaheri.movieapp.core.database.entities.RemoteKey
-import ir.atefehtaheri.movieapp.data.tvshowlist.remote.TvShowsDatasource
-import ir.atefehtaheri.movieapp.data.tvshowlist.remote.models.asMovieEntity
+import ir.atefehtaheri.movieapp.data.movieslist.remote.MoviesDatasource
+import ir.atefehtaheri.movieapp.data.movieslist.remote.models.asMovieEntity
 import javax.inject.Inject
 
 @OptIn(ExperimentalPagingApi::class)
-class TvShowRemoteMediator @Inject constructor(
-    private val tvShowsDatasource: TvShowsDatasource,
+class SearchMovieRemoteMediator @Inject constructor(
+    private val moviesDatasource: MoviesDatasource,
     private val movieDatabase: MovieDatabase,
-    private val type: MediaType.TvShow
+    private val query: String,
+    private val type: Type = Type.Movie,
 ) : RemoteMediator<Int, MovieEntity>() {
 
     private val remoteKeyDao = movieDatabase.remoteKeyDao
@@ -30,7 +31,6 @@ class TvShowRemoteMediator @Inject constructor(
         state: PagingState<Int, MovieEntity>
     ): MediatorResult {
 
-
         return try {
             val page = when (loadType) {
                 LoadType.REFRESH -> {
@@ -39,6 +39,7 @@ class TvShowRemoteMediator @Inject constructor(
                 }
 
                 LoadType.PREPEND -> {
+
                     val remoteKey = getRemoteKeyForFirstItem(state)
                     val prevPage = remoteKey?.prev_page ?: return MediatorResult.Success(
                         remoteKey != null
@@ -54,19 +55,13 @@ class TvShowRemoteMediator @Inject constructor(
                     nextPage
                 }
             }
-
-            val networkResponse = tvShowsDatasource.getTvShowPager(type, page)
-
+            val networkResponse = moviesDatasource.getSearchMoviesPager(query, page)
             when (networkResponse) {
                 is ResultStatus.Failure -> MediatorResult.Error(Throwable(networkResponse.exception_message))
                 is ResultStatus.Success -> {
 
-                    val data =
-                        networkResponse.data?.results?.map {
-                            it.asMovieEntity(type) }
-                            ?: emptyList()
-
-
+                    val data = networkResponse.data?.results?.map { it.asMovieEntity(type) }
+                        ?: emptyList()
 
                     val endOfPaginationReached = networkResponse.data?.results!!.isEmpty()
 
@@ -76,15 +71,15 @@ class TvShowRemoteMediator @Inject constructor(
 
                     movieDatabase.withTransaction {
                         if (loadType == LoadType.REFRESH) {
-                            movieDao.clearMovieEntityByType(type.mediaType)
-                            remoteKeyDao.clearKeys(type.mediaType)
+                            movieDao.clearMovieEntityByType(type.name)
+                            remoteKeyDao.clearKeys(type.name)
                         }
 
                         val movieKeys = movieDao.insertAllMovieEntity(data)
-
                         val remoteKeys = data.mapIndexed { index, movieEtity ->
+
                             RemoteKey(
-                                mediaType = type.mediaType,
+                                mediaType = type.name,
                                 next_page = nextPage,
                                 prev_page = prevPage,
                                 id = movieKeys.get(index).toInt()
@@ -111,6 +106,7 @@ class TvShowRemoteMediator @Inject constructor(
         return state.pages.lastOrNull {
             it.data.isNotEmpty()
         }?.data?.lastOrNull()?.let { entity ->
+
             remoteKeyDao.getKeyById(
                 entity.id_auto
             )
@@ -143,7 +139,4 @@ class TvShowRemoteMediator @Inject constructor(
 
     }
 }
-
-
-
 

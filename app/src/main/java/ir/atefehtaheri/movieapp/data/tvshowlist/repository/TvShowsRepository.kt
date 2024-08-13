@@ -12,5 +12,6 @@ interface TvShowsRepository {
     }
     suspend fun getFirstPageTvShowPager(mediaType: MediaType.TvShow): ResultStatus<List<MovieDataModel>>
     fun getTvShowPaging(type: MediaType.TvShow): Flow<PagingData<MovieDataModel>>
+    fun getSearchTvShowPaging(query:String): Flow<PagingData<MovieDataModel>>
 
 }

@@ -1,5 +1,6 @@
 package ir.atefehtaheri.movieapp.data.tvshowlist.remote.api
 
+import ir.atefehtaheri.movieapp.data.movieslist.remote.models.MoviesDto
 import ir.atefehtaheri.movieapp.data.tvshowlist.remote.models.TvShowsDto
 import ir.atefehtaheri.network.ErrorResponse
 import ir.atefehtaheri.network.NetworkResponse
@@ -22,4 +23,11 @@ interface TvShowApi {
         @Query("page") page:Int = 1,
     ): NetworkResponse<TvShowsDto, ErrorResponse>
 
+
+    @GET("3/search/tv?")
+    suspend fun getSearchTvShowList(
+        @Query("language") language: String = "en-US",
+        @Query("page") page: Int = 1,
+        @Query("query") query: String = "",
+    ): NetworkResponse<TvShowsDto, ErrorResponse>
 }

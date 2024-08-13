@@ -1,5 +1,6 @@
 package ir.atefehtaheri.movieapp.feature.listscreen
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -67,13 +68,12 @@ internal fun MovieListRoute(
 }
 
 @Composable
-private fun MovieListScreen(
+fun MovieListScreen(
     movies: LazyPagingItems<MovieDataModel>,
     tvShows: LazyPagingItems<MovieDataModel>,
     onItemClick: (MediaType, String, NavOptions?) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
     when {
         movies.loadState.refresh is LoadState.Error -> ShowError(
             (movies.loadState.refresh as LoadState.Error).error.message ?: ""
@@ -85,6 +85,8 @@ private fun MovieListScreen(
 
         movies.loadState.refresh is LoadState.Loading -> LoadingState()
         tvShows.loadState.refresh is LoadState.Loading -> LoadingState()
+
+
 
         else -> ShowListScreen(movies, tvShows, onItemClick, modifier)
     }

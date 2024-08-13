@@ -29,6 +29,7 @@ class MovieViewModel @Inject constructor(
     fun getDataMovie(mediaType: MediaType.Movie) {
         val movies: Flow<PagingData<MovieDataModel>> = moviesRepository.getMoviesPaging(mediaType)
             .cachedIn(viewModelScope)
+
         _uiState.update {
             it.copy(movies = movies)
         }

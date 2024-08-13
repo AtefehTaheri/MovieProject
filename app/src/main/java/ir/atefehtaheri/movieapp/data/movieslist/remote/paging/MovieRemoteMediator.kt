@@ -12,6 +12,7 @@ import ir.atefehtaheri.movieapp.core.database.MovieDatabase
 import ir.atefehtaheri.movieapp.core.database.entities.MovieEntity
 import ir.atefehtaheri.movieapp.core.database.entities.RemoteKey
 import ir.atefehtaheri.movieapp.data.movieslist.remote.MoviesDatasource
+import ir.atefehtaheri.movieapp.data.movieslist.remote.models.MoviesDto
 import ir.atefehtaheri.movieapp.data.movieslist.remote.models.asMovieEntity
 import javax.inject.Inject
 
@@ -19,7 +20,7 @@ import javax.inject.Inject
 class MovieRemoteMediator @Inject constructor(
     private val moviesDatasource: MoviesDatasource,
     private val movieDatabase: MovieDatabase,
-    private val type: MediaType.Movie
+    private val type: MediaType.Movie,
 ) : RemoteMediator<Int, MovieEntity>() {
 
     private val remoteKeyDao = movieDatabase.remoteKeyDao
@@ -38,7 +39,7 @@ class MovieRemoteMediator @Inject constructor(
                 }
 
                 LoadType.PREPEND -> {
-//
+
                     val remoteKey = getRemoteKeyForFirstItem(state)
                     val prevPage = remoteKey?.prev_page ?: return MediatorResult.Success(
                         remoteKey != null
@@ -56,7 +57,6 @@ class MovieRemoteMediator @Inject constructor(
             }
 
             val networkResponse = moviesDatasource.getMoviesPager(type, page)
-
             when (networkResponse) {
                 is ResultStatus.Failure -> MediatorResult.Error(Throwable(networkResponse.exception_message))
                 is ResultStatus.Success -> {
@@ -78,7 +78,7 @@ class MovieRemoteMediator @Inject constructor(
                         }
 
                         val movieKeys = movieDao.insertAllMovieEntity(data)
-                        val remoteKeys = data.mapIndexed  { index,movieEtity ->
+                        val remoteKeys = data.mapIndexed { index, movieEtity ->
 
                             RemoteKey(
                                 mediaType = type.mediaType,
@@ -108,7 +108,6 @@ class MovieRemoteMediator @Inject constructor(
         return state.pages.lastOrNull {
             it.data.isNotEmpty()
         }?.data?.lastOrNull()?.let { entity ->
-            Log.d("sss", "aaa" + entity.id_auto)
 
             remoteKeyDao.getKeyById(
                 entity.id_auto

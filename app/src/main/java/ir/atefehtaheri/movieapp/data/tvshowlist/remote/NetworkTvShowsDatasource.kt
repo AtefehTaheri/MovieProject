@@ -13,12 +13,15 @@ class NetworkTvShowsDatasource @Inject constructor(
 ) : TvShowsDatasource {
 
 
-    override suspend fun getTvShowPager(mediaType: MediaType.TvShow, page: Int): ResultStatus<TvShowsDto> {
+    override suspend fun getTvShowPager(
+        mediaType: MediaType.TvShow,
+        page: Int
+    ): ResultStatus<TvShowsDto> {
 
 
         val result = when (mediaType) {
-            MediaType.TvShow.TOP_RATED -> tvShowApi.getTopRatedTvShowList(page=page)
-            MediaType.TvShow.Airing -> tvShowApi.getTvAiringList(page=page)
+            MediaType.TvShow.TOP_RATED -> tvShowApi.getTopRatedTvShowList(page = page)
+            MediaType.TvShow.Airing -> tvShowApi.getTvAiringList(page = page)
         }
 
         return when (result) {
@@ -34,4 +37,18 @@ class NetworkTvShowsDatasource @Inject constructor(
         }
     }
 
+    override suspend fun getSearchTvShowPager(query: String, page: Int): ResultStatus<TvShowsDto> {
+        val result = tvShowApi.getSearchTvShowList(page = page, query = query)
+        return when (result) {
+            is NetworkResponse.ApiError -> ResultStatus.Failure(result.body.status_message)
+            is NetworkResponse.NetworkError -> ResultStatus.Failure(
+                result.error.message ?: "NetworkError"
+            )
+
+            is NetworkResponse.Success -> ResultStatus.Success(result.body)
+            is NetworkResponse.UnknownError -> ResultStatus.Failure(
+                result.error.message ?: "UnknownError"
+            )
+        }
+    }
 }
