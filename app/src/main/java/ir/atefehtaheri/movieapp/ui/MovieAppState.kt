@@ -74,7 +74,7 @@ class MovieAppState(
 
     val shouldShowBottomBar: Boolean
         @Composable get() =
-            navigationType == AppNavigationType.BOTTOM_NAVIGATION && currentTopLevelDestination != null
+            navigationType != AppNavigationType.NAVIGATION_RAIL && currentTopLevelDestination != null
 
     val currentDestination: NavDestination?
         @Composable get() = navController

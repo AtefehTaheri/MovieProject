@@ -13,6 +13,10 @@ import ir.atefehtaheri.movieapp.feature.listscreen.uistate.ListUiState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -22,24 +26,23 @@ class MovieViewModel @Inject constructor(
     private val tvShowsRepository: TvShowsRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ListUiState())
-    val uiState = _uiState.asStateFlow()
+    private val _movietype = MutableStateFlow(MediaType.Movie.UPCOMING)
+    private val _tvshowtype = MutableStateFlow(MediaType.TvShow.Airing)
 
 
-    fun getDataMovie(mediaType: MediaType.Movie) {
-        val movies: Flow<PagingData<MovieDataModel>> = moviesRepository.getMoviesPaging(mediaType)
-            .cachedIn(viewModelScope)
+    val movies = _movietype.flatMapLatest {
+        moviesRepository.getMoviesPaging(it)
+    }.cachedIn(viewModelScope)
 
-        _uiState.update {
-            it.copy(movies = movies)
-        }
+    val tvShows = _tvshowtype.flatMapLatest {
+        tvShowsRepository.getTvShowPaging(it)
+    }.cachedIn(viewModelScope)
+
+
+
+    fun updateType(typeMovie: MediaType.Movie, typeTvShow: MediaType.TvShow) {
+        _movietype.value = typeMovie
+        _tvshowtype.value = typeTvShow
     }
 
-    fun getDataTvShow(mediaType: MediaType.TvShow) {
-        val tvShows: Flow<PagingData<MovieDataModel>> = tvShowsRepository.getTvShowPaging(mediaType)
-            .cachedIn(viewModelScope)
-        _uiState.update {
-            it.copy(tvShows = tvShows)
-        }
-    }
 }

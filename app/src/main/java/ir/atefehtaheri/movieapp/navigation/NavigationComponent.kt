@@ -66,7 +66,6 @@ fun MovieNavRail(
     onNavigateToDestination: (TopLevelDestination) -> Unit,
     currentDestination: NavDestination?,
     modifier: Modifier = Modifier,
-    onDrawerClicked: () -> Unit = {}
 ) {
     MovieNavigationRail(modifier = modifier) {
         destinations.forEach { destination ->
@@ -74,8 +73,9 @@ fun MovieNavRail(
             MovieNavigationRailItem(
                 selected = selected,
                 onClick = {
-                    onDrawerClicked()
-                    onNavigateToDestination(destination)
+                    if (currentDestination?.route != destination.route) {
+                        onNavigateToDestination(destination)
+                    }
                 },
                 icon = {
                     Icon(

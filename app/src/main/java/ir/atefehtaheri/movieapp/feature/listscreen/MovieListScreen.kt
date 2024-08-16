@@ -1,5 +1,6 @@
 package ir.atefehtaheri.movieapp.feature.listscreen
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -26,8 +27,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,6 +48,7 @@ import androidx.navigation.NavOptions
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.log
 import ir.atefehtaheri.movieapp.R
 import ir.atefehtaheri.movieapp.core.common.models.MediaType
 import ir.atefehtaheri.movieapp.core.common.models.Type
@@ -62,17 +67,14 @@ internal fun MovieListRoute(
     mediaTypeTvShow: MediaType.TvShow
 
 ) {
-    LaunchedEffect(key1 = Unit) {
-        movieViewModel.getDataMovie(mediaTypeMovie)
-        movieViewModel.getDataTvShow(mediaTypeTvShow)
-    }
 
-    val uiState by movieViewModel.uiState.collectAsStateWithLifecycle()
-    val movies = uiState.movies.collectAsLazyPagingItems()
-    val tvShows = uiState.tvShows.collectAsLazyPagingItems()
+    movieViewModel.updateType(mediaTypeMovie, mediaTypeTvShow)
+    val movies = movieViewModel.movies.collectAsLazyPagingItems()
+    val tvShows = movieViewModel.tvShows.collectAsLazyPagingItems()
+
     when (mediaTypeMovie) {
-        MediaType.Movie.UPCOMING -> UpcomingListScreen(movies, onItemClick)
-        else -> MovieListScreen(movies, tvShows, onItemClick)
+        MediaType.Movie.UPCOMING -> UpcomingListScreen(movies, onItemClick,modifier)
+        else -> MovieListScreen(movies, tvShows, onItemClick,modifier)
     }
 }
 
@@ -126,10 +128,12 @@ fun ShowListScreen(
 
 
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
-    val tabs = remember { InformationTabs.entries }
+    val tabs = rememberSaveable { InformationTabs.entries }
     val pagerState = rememberPagerState(pageCount = tabs::size)
-    val selectedTabIndex = pagerState.currentPage
-
+    val selectedTabIndex = rememberSaveable { mutableStateOf(pagerState.currentPage) }
+    LaunchedEffect(pagerState.currentPage) {
+        selectedTabIndex.value = pagerState.currentPage
+    }
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -144,7 +148,7 @@ fun ShowListScreen(
 
         ) { index ->
             when (index) {
-                0 -> PageContent_Movie(movies, onItemClick,Modifier.fillMaxSize())
+                0 -> PageContent_Movie(movies, onItemClick, Modifier.fillMaxSize())
                 1 -> PageContent_Tvshow(tvshow, onItemClick, Modifier.fillMaxSize())
             }
         }
@@ -154,7 +158,7 @@ fun ShowListScreen(
                 .background(Color.Black.copy(alpha = 0.5f))
         ) {
 
-            TabRow(selectedTabIndex = selectedTabIndex,
+            TabRow(selectedTabIndex = selectedTabIndex.value,
                 containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -166,7 +170,7 @@ fun ShowListScreen(
             ) {
                 tabs.forEachIndexed { index, currentTab ->
                     Tab(
-                        modifier = if (selectedTabIndex == index) Modifier
+                        modifier = if (selectedTabIndex.value == index) Modifier
                             .clip(RoundedCornerShape(50))
                             .background(
                                 MaterialTheme.colorScheme.secondaryContainer
@@ -178,7 +182,7 @@ fun ShowListScreen(
                             ),
 
 
-                        selected = selectedTabIndex == index,
+                        selected = selectedTabIndex.value == index,
                         selectedContentColor = MaterialTheme.colorScheme.primaryContainer,
                         unselectedContentColor = MaterialTheme.colorScheme.outline,
                         onClick = {
@@ -251,9 +255,11 @@ private fun PageContent_Movie(
         }
         AnimatedVisibility(visible = movies.itemCount == 0) {
 
-            Column(Modifier.fillMaxSize(),
+            Column(
+                Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center) {
+                verticalArrangement = Arrangement.Center
+            ) {
 
                 Image(
                     painter = painterResource(id = R.drawable.searchicon),
@@ -317,9 +323,11 @@ private fun PageContent_Tvshow(
             }
         }
         AnimatedVisibility(visible = tvshow.itemCount == 0) {
-            Column(Modifier.fillMaxSize(),
+            Column(
+                Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center) {
+                verticalArrangement = Arrangement.Center
+            ) {
 
                 Image(
                     painter = painterResource(id = R.drawable.searchicon),
