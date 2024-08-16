@@ -1,21 +1,22 @@
 package ir.atefehtaheri.movieapp.ui
 
-import android.util.Log
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavDestination
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import ir.atefehtaheri.movieapp.core.common.models.AppContentType
 import ir.atefehtaheri.movieapp.core.common.models.AppNavigationType
+import ir.atefehtaheri.movieapp.feature.favoritescreen.navigation.FavoriteScreenRoute
+import ir.atefehtaheri.movieapp.feature.favoritescreen.navigation.navigateToFavoriteScreen
 import ir.atefehtaheri.movieapp.feature.homescreen.navigation.HomeScreenRoute
 import ir.atefehtaheri.movieapp.feature.homescreen.navigation.navigateToHomeScreen
+import ir.atefehtaheri.movieapp.feature.searchscreen.navigation.SearchScreenRoute
 import ir.atefehtaheri.movieapp.feature.searchscreen.navigation.navigateToSearchScreen
 import ir.atefehtaheri.movieapp.navigation.TopLevelDestination
 
@@ -46,7 +47,6 @@ class MovieAppState(
     val navigationType: AppNavigationType
     val contentType: AppContentType
 
-
     init {
 
         when (windowSizeClass.widthSizeClass) {
@@ -58,7 +58,6 @@ class MovieAppState(
             WindowWidthSizeClass.Medium -> {
                 navigationType = AppNavigationType.NAVIGATION_RAIL
                 contentType = AppContentType.SINGLE_PANE
-
             }
 
             WindowWidthSizeClass.Expanded -> {
@@ -73,24 +72,30 @@ class MovieAppState(
         }
     }
 
+    val shouldShowBottomBar: Boolean
+        @Composable get() =
+            navigationType == AppNavigationType.BOTTOM_NAVIGATION && currentTopLevelDestination != null
 
     val currentDestination: NavDestination?
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
 
     val currentTopLevelDestination: TopLevelDestination?
-        @Composable get() = when (currentDestination?.route) {
+        @Composable
+        get() = when (currentDestination?.route) {
             HomeScreenRoute -> TopLevelDestination.HOME
+            SearchScreenRoute -> TopLevelDestination.SEARCH
+            FavoriteScreenRoute -> TopLevelDestination.FAVORITE
             else -> null
         }
 
     val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.values().asList()
 
+
     fun navigateToTopLevelDestination(topLevelDestination: TopLevelDestination) {
 
         val topLevelNavOptions = navOptions {
-            popUpTo(navController.graph.findStartDestination().id) {
-
+            popUpTo(0) {
                 inclusive = true
             }
         }
@@ -98,10 +103,14 @@ class MovieAppState(
             TopLevelDestination.HOME -> {
                 navController.navigateToHomeScreen(topLevelNavOptions)
             }
+
             TopLevelDestination.SEARCH -> {
                 navController.navigateToSearchScreen(topLevelNavOptions)
             }
-            TopLevelDestination.FAVORITE -> {}
+
+            TopLevelDestination.FAVORITE -> {
+                navController.navigateToFavoriteScreen(topLevelNavOptions)
+            }
         }
     }
 }

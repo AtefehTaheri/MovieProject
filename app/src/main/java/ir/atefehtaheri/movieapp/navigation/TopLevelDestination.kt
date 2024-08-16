@@ -3,6 +3,7 @@ package ir.atefehtaheri.movieapp.navigation
 import androidx.compose.ui.graphics.vector.ImageVector
 import ir.atefehtaheri.movieapp.R
 import ir.atefehtaheri.movieapp.core.designsystem.icon.MovieIcons
+import ir.atefehtaheri.movieapp.feature.favoritescreen.navigation.FavoriteScreenRoute
 import ir.atefehtaheri.movieapp.feature.homescreen.navigation.HomeScreenRoute
 import ir.atefehtaheri.movieapp.feature.searchscreen.navigation.SearchScreenRoute
 
@@ -33,6 +34,6 @@ enum class TopLevelDestination(
         unselectedIcon = MovieIcons.FavoriteBorder,
         iconTextId = R.string.favorite,
         titleTextId = R.string.favorite,
-        route = "HomeScreenRoute"
+        route = FavoriteScreenRoute
     )
 }

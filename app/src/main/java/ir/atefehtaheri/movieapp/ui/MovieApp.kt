@@ -32,7 +32,7 @@ fun MovieApp(
 ) {
 
     when (appState.navigationType) {
-         AppNavigationType.BOTTOM_NAVIGATION , AppNavigationType.PERMANENT_NAVIGATION_DRAWER -> {
+        AppNavigationType.BOTTOM_NAVIGATION, AppNavigationType.PERMANENT_NAVIGATION_DRAWER -> {
             MovieScaffold(
                 appState,
                 true,
@@ -45,13 +45,6 @@ fun MovieApp(
                 false,
             )
         }
-
-//        AppNavigationType.PERMANENT_NAVIGATION_DRAWER -> {
-//            MovieScaffold(
-//                appState,
-//                true,
-//            )
-//        }
     }
 
 
@@ -68,12 +61,13 @@ private fun MovieScaffold(
         contentColor = MaterialTheme.colorScheme.onBackground,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
-            if (shouldShowBottomBar) {
+            if (appState.shouldShowBottomBar) {
                 MovieBottomBar(
                     navItems = appState.topLevelDestinations,
                     onNavigateToDestination = appState::navigateToTopLevelDestination,
                     currentDestination = appState.currentDestination,
-                )
+
+                    )
             }
         },
     ) { padding ->

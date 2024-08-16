@@ -3,6 +3,7 @@
     <string name="home">Home</string>
     <string name="search">Search</string>
     <string name="favorite">Favorite</string>
+    <string name="delete">Delete</string>
     <string name="logo">Logo</string>
     <string name="showall">See All</string>
     <string name="top_rated">Top Rated</string>
@@ -35,8 +36,10 @@
     <string name="text_placeholder">Enter Movie Name</string>
     <string name="not_found_image">Not Found</string>
     <string name="not_found_movie">Movie not found</string>
+    <string name="not_found_favorite_movie">The list of favorite movies is empty</string>
     <string name="not_found_tvshow">TvShow not found</string>
     <string name="search_button">Search Button</string>
     <string name="empty_state_search">Search for Movies and TvShow</string>
+    <string name="erroe_message">Search Button</string>
 
 </resources>
