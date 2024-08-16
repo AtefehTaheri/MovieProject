@@ -1,6 +1,8 @@
 package ir.atefehtaheri.movieapp.data.detailitem.repository.models
 
+import ir.atefehtaheri.movieapp.core.common.models.Type
 import ir.atefehtaheri.movieapp.data.detailitem.remote.models.tvshow.TvShowDetailDto
+import ir.atefehtaheri.movieapp.data.favoritelist.local.models.FavoriteMovie
 
 
 data class TvShowDetailDataModel(
@@ -22,9 +24,11 @@ data class TvShowDetailDataModel(
     val seasons: List<Season>,
     val status: String,
     val vote_average: Double,
+    val isFavorite: Boolean
+
 )
 
-fun TvShowDetailDto.asTvShowDetailDataModel():TvShowDetailDataModel{
+fun TvShowDetailDto.asTvShowDetailDataModel(isFavorite: Boolean):TvShowDetailDataModel{
     return TvShowDetailDataModel(
         genres=genres.map{it.name},
         adult=adult,
@@ -58,6 +62,20 @@ fun TvShowDetailDto.asTvShowDetailDataModel():TvShowDetailDataModel{
                 poster_path
                 ,season_number
                 ,vote_average)}
-        }
+        },
+        isFavorite=isFavorite
     )
+}
+
+fun TvShowDetailDataModel.asFavoriteMovie(): FavoriteMovie {
+    return FavoriteMovie(
+        id = id,
+        title = name,
+        overview = overview,
+        poster_path = poster_path,
+        release_date = first_air_date,
+        vote_average = vote_average,
+        type_movie = Type.TvShow,
+    )
+
 }

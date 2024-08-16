@@ -14,14 +14,14 @@ interface DetailItemApi {
 
     @GET("3/movie/{movie_id}?")
     suspend fun getDetailMovie(
-        @Path("movie_id") movie_id:String,
+        @Path("movie_id") movie_id:Int,
         @Query("append_to_response") append_to_response:String= "credits,images",
     ): NetworkResponse<MovieDetailDto, ErrorResponse>
 
 
     @GET("3/tv/{series_id}?")
     suspend fun getDetailTvShow(
-        @Path("series_id") series_id:String,
+        @Path("series_id") series_id:Int,
         @Query("append_to_response") append_to_response:String= "credits,images",
     ): NetworkResponse<TvShowDetailDto, ErrorResponse>
 

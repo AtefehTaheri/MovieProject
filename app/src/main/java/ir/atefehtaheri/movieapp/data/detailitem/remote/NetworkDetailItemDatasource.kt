@@ -9,28 +9,34 @@ import javax.inject.Inject
 
 class NetworkDetailItemDatasource @Inject constructor(
     private val detailItemApi: DetailItemApi,
-    ) : DetailItemDatasource {
+) : DetailItemDatasource {
 
 
-    override suspend fun getDetailMovie(movieid: String): ResultStatus<MovieDetailDto> {
+    override suspend fun getDetailMovie(movieid: Int): ResultStatus<MovieDetailDto> {
         return when (val result = detailItemApi.getDetailMovie(movieid)) {
             is NetworkResponse.ApiError -> ResultStatus.Failure(result.body.status_message)
             is NetworkResponse.NetworkError -> ResultStatus.Failure(
-                result.error.message ?: "NetworkError")
+                result.error.message ?: "NetworkError"
+            )
+
             is NetworkResponse.Success -> ResultStatus.Success(result.body)
             is NetworkResponse.UnknownError -> ResultStatus.Failure(
-                result.error.message ?: "UnknownError")
+                result.error.message ?: "UnknownError"
+            )
         }
     }
 
-    override suspend fun getDetailTvShow(tvshowid: String): ResultStatus<TvShowDetailDto> {
+    override suspend fun getDetailTvShow(tvshowid: Int): ResultStatus<TvShowDetailDto> {
         return when (val result = detailItemApi.getDetailTvShow(tvshowid)) {
             is NetworkResponse.ApiError -> ResultStatus.Failure(result.body.status_message)
             is NetworkResponse.NetworkError -> ResultStatus.Failure(
-                result.error.message ?: "NetworkError")
+                result.error.message ?: "NetworkError"
+            )
+
             is NetworkResponse.Success -> ResultStatus.Success(result.body)
             is NetworkResponse.UnknownError -> ResultStatus.Failure(
-                result.error.message ?: "UnknownError")
+                result.error.message ?: "UnknownError"
+            )
         }
     }
 

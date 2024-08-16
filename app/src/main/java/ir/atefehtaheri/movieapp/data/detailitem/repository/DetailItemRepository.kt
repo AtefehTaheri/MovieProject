@@ -6,8 +6,8 @@ import ir.atefehtaheri.movieapp.data.detailitem.repository.models.TvShowDetailDa
 
 interface DetailItemRepository {
 
-    suspend fun getDetailMovie(movieid:String): ResultStatus<MovieDetailDataModel>
-    suspend fun getDetailTvShow(tvshowid:String): ResultStatus<TvShowDetailDataModel>
+    suspend fun getDetailMovie(movieid:Int): ResultStatus<MovieDetailDataModel>
+    suspend fun getDetailTvShow(tvshowid:Int): ResultStatus<TvShowDetailDataModel>
 
 
 }

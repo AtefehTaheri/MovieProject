@@ -21,12 +21,12 @@ data class MovieDataModel(
 )
 
 
-
 fun MoviesDto.asMovieListDataModel(media_type: MediaType.Movie): List<MovieDataModel> {
     return this.results.map {
         it.asMovieDataModel(media_type)
     }
 }
+
 
 
 fun Movie.asMovieDataModel(media_type: MediaType.Movie): MovieDataModel {
