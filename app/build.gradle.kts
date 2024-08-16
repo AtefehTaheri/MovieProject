@@ -99,13 +99,6 @@ dependencies {
     implementation(libs.dotsindicator)
     implementation(libs.androidx.lifecycle)
 
-//
-//    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-//    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
-//
-//    implementation("androidx.compose.material:material-icons-core:1.3.0")
-//    implementation("androidx.compose.material:material-icons-extended:1.3.0")
-
     implementation(libs.material.icons.core)
     implementation(libs.material.icons.extended)
 
