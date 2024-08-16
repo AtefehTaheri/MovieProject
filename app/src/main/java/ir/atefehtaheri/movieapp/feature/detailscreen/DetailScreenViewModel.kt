@@ -9,12 +9,10 @@ import ir.atefehtaheri.movieapp.data.detailitem.repository.DetailItemRepository
 import ir.atefehtaheri.movieapp.data.detailitem.repository.models.asFavoriteMovie
 import ir.atefehtaheri.movieapp.data.favoritelist.local.FavoriteListDatasource
 import ir.atefehtaheri.movieapp.feature.detailscreen.uistate.DetailState
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,65 +28,62 @@ class DetailScreenViewModel @Inject constructor(
 
     fun getDetailMovie(movieid: Int) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                _detailMovie.update {
-                    it.copy(
-                        null,
-                        null,
-                        true,
-                        null
-                    )
-                }
+            _detailMovie.update {
+                it.copy(
+                    null,
+                    null,
+                    true,
+                    null
+                )
+            }
 
-                val response = detailItemRepository.getDetailMovie(movieid)
-                when (response) {
-                    is ResultStatus.Failure ->
-                        _detailMovie.update {
-                            it.copy(errorMessage = response.exception_message)
-                        }
+            val response = detailItemRepository.getDetailMovie(movieid)
+            when (response) {
+                is ResultStatus.Failure ->
+                    _detailMovie.update {
+                        it.copy(errorMessage = response.exception_message)
+                    }
 
-                    is ResultStatus.Success -> {
-                        _detailMovie.update {
-                            it.copy(
-                                response.data,
-                                null,
-                                false,
-                                null
-                            )
-                        }
+                is ResultStatus.Success -> {
+                    _detailMovie.update {
+                        it.copy(
+                            response.data,
+                            null,
+                            false,
+                            null
+                        )
                     }
                 }
             }
+
         }
     }
 
     fun getDetailTvShow(tvshowid: Int) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                _detailMovie.update {
-                    it.copy(
-                        null,
-                        null,
-                        true,
-                        null
-                    )
-                }
-                val response = detailItemRepository.getDetailTvShow(tvshowid)
-                when (response) {
-                    is ResultStatus.Failure ->
-                        _detailMovie.update {
-                            it.copy(errorMessage = response.exception_message)
-                        }
+            _detailMovie.update {
+                it.copy(
+                    null,
+                    null,
+                    true,
+                    null
+                )
+            }
+            val response = detailItemRepository.getDetailTvShow(tvshowid)
+            when (response) {
+                is ResultStatus.Failure ->
+                    _detailMovie.update {
+                        it.copy(errorMessage = response.exception_message)
+                    }
 
-                    is ResultStatus.Success -> {
-                        _detailMovie.update {
-                            it.copy(
-                                null,
-                                response.data,
-                                false,
-                                null
-                            )
-                        }
+                is ResultStatus.Success -> {
+                    _detailMovie.update {
+                        it.copy(
+                            null,
+                            response.data,
+                            false,
+                            null
+                        )
                     }
                 }
             }
@@ -113,22 +108,20 @@ class DetailScreenViewModel @Inject constructor(
 
     fun addMovieToFavoriteList() {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                val result = favoriteListDatasource.addFavoriteMovie(
-                    _detailMovie.value.MovieDetailDataModel!!.asFavoriteMovie()
-                )
-                when (result) {
-                    is ResultStatus.Failure ->
-                        _detailMovie.update {
-                            it.copy(errorMessage = result.exception_message)
-                        }
+            val result = favoriteListDatasource.addFavoriteMovie(
+                _detailMovie.value.MovieDetailDataModel!!.asFavoriteMovie()
+            )
+            when (result) {
+                is ResultStatus.Failure ->
+                    _detailMovie.update {
+                        it.copy(errorMessage = result.exception_message)
+                    }
 
-                    is ResultStatus.Success -> {
-                        val favoriteMovie =
-                            _detailMovie.value.MovieDetailDataModel!!.copy(isFavorite = true)
-                        _detailMovie.update {
-                            it.copy(MovieDetailDataModel = favoriteMovie)
-                        }
+                is ResultStatus.Success -> {
+                    val favoriteMovie =
+                        _detailMovie.value.MovieDetailDataModel!!.copy(isFavorite = true)
+                    _detailMovie.update {
+                        it.copy(MovieDetailDataModel = favoriteMovie)
                     }
                 }
             }
@@ -137,25 +130,23 @@ class DetailScreenViewModel @Inject constructor(
 
     fun removeMovieFavoriteList(id: Int) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                val result = favoriteListDatasource.removeFavoriteMovie(
-                    Type.Movie,
-                    id
-                )
-                when (result) {
-                    is ResultStatus.Failure ->
-                        _detailMovie.update {
-                            it.copy(errorMessage = result.exception_message)
-                        }
-
-                    is ResultStatus.Success -> {
-                        val favoriteMovie =
-                            _detailMovie.value.MovieDetailDataModel!!.copy(isFavorite = false)
-                        _detailMovie.update {
-                            it.copy(MovieDetailDataModel = favoriteMovie)
-                        }
-
+            val result = favoriteListDatasource.removeFavoriteMovie(
+                Type.Movie,
+                id
+            )
+            when (result) {
+                is ResultStatus.Failure ->
+                    _detailMovie.update {
+                        it.copy(errorMessage = result.exception_message)
                     }
+
+                is ResultStatus.Success -> {
+                    val favoriteMovie =
+                        _detailMovie.value.MovieDetailDataModel!!.copy(isFavorite = false)
+                    _detailMovie.update {
+                        it.copy(MovieDetailDataModel = favoriteMovie)
+                    }
+
                 }
             }
         }
@@ -164,51 +155,46 @@ class DetailScreenViewModel @Inject constructor(
 
     fun addTvShowToFavoriteList() {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                val result = favoriteListDatasource.addFavoriteMovie(
-                    _detailMovie.value.tvShowDetailDataModel!!.asFavoriteMovie()
-                )
-                when (result) {
-                    is ResultStatus.Failure ->
-                        _detailMovie.update {
-                            it.copy(errorMessage = result.exception_message)
-                        }
+            val result = favoriteListDatasource.addFavoriteMovie(
+                _detailMovie.value.tvShowDetailDataModel!!.asFavoriteMovie()
+            )
+            when (result) {
+                is ResultStatus.Failure ->
+                    _detailMovie.update {
+                        it.copy(errorMessage = result.exception_message)
+                    }
 
-                    is ResultStatus.Success -> {
-                        val favoriteTvShow =
-                            _detailMovie.value.tvShowDetailDataModel!!.copy(isFavorite = true)
-                        _detailMovie.update {
-                            it.copy(tvShowDetailDataModel = favoriteTvShow)
-                        }
+                is ResultStatus.Success -> {
+                    val favoriteTvShow =
+                        _detailMovie.value.tvShowDetailDataModel!!.copy(isFavorite = true)
+                    _detailMovie.update {
+                        it.copy(tvShowDetailDataModel = favoriteTvShow)
                     }
                 }
             }
-
         }
     }
 
 
     fun removeTvShowFavoriteList(id: Int) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                val result = favoriteListDatasource.removeFavoriteMovie(
-                    Type.TvShow,
-                    id
-                )
-                when (result) {
-                    is ResultStatus.Failure ->
-                        _detailMovie.update {
-                            it.copy(errorMessage = result.exception_message)
-                        }
-
-                    is ResultStatus.Success -> {
-                        val favoriteTvShow =
-                            _detailMovie.value.tvShowDetailDataModel!!.copy(isFavorite = false)
-                        _detailMovie.update {
-                            it.copy(tvShowDetailDataModel = favoriteTvShow)
-                        }
-
+            val result = favoriteListDatasource.removeFavoriteMovie(
+                Type.TvShow,
+                id
+            )
+            when (result) {
+                is ResultStatus.Failure ->
+                    _detailMovie.update {
+                        it.copy(errorMessage = result.exception_message)
                     }
+
+                is ResultStatus.Success -> {
+                    val favoriteTvShow =
+                        _detailMovie.value.tvShowDetailDataModel!!.copy(isFavorite = false)
+                    _detailMovie.update {
+                        it.copy(tvShowDetailDataModel = favoriteTvShow)
+                    }
+
                 }
             }
         }

@@ -6,7 +6,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ir.atefehtaheri.movieapp.core.network.di.createApiService
 import ir.atefehtaheri.movieapp.data.detailitem.remote.api.DetailItemApi
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import retrofit2.Retrofit
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -19,4 +22,7 @@ object DetailItemApiModule {
         return createApiService(DetailItemApi::class.java, retrofit)
     }
 
+    @Singleton
+    @Provides
+    fun provideIOCoroutineDispatcher(): CoroutineDispatcher = Dispatchers.IO
 }

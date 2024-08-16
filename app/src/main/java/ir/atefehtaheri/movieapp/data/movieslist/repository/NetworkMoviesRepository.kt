@@ -16,24 +16,31 @@ import ir.atefehtaheri.movieapp.data.movieslist.remote.paging.SearchMovieRemoteM
 import ir.atefehtaheri.movieapp.data.movieslist.repository.models.MovieDataModel
 import ir.atefehtaheri.movieapp.data.movieslist.repository.models.asMovieDataModel
 import ir.atefehtaheri.movieapp.data.movieslist.repository.models.asMovieListDataModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class NetworkMoviesRepository @Inject constructor(
     private val moviesDatasource: MoviesDatasource,
     private val movieDatabase: MovieDatabase,
+    private val dispatcher: CoroutineDispatcher,
 ) : MoviesRepository {
 
     override suspend fun getFirstPageMoviesPager(mediaType: MediaType.Movie): ResultStatus<List<MovieDataModel>> {
-
-        return when (val result = moviesDatasource.getMoviesPager(mediaType, 1)) {
-            is ResultStatus.Failure -> ResultStatus.Failure(result.exception_message)
-            is ResultStatus.Success -> ResultStatus.Success(
-                result.data?.asMovieListDataModel(
-                    mediaType
+        return withContext(dispatcher) {
+            ensureActive()
+            when (val result = moviesDatasource.getMoviesPager(mediaType, 1)) {
+                is ResultStatus.Failure -> ResultStatus.Failure(result.exception_message)
+                is ResultStatus.Success -> ResultStatus.Success(
+                    result.data?.asMovieListDataModel(
+                        mediaType
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -50,23 +57,22 @@ class NetworkMoviesRepository @Inject constructor(
             it.map {
                 it.asMovieDataModel(mediaType)
             }
-        }
+        }.flowOn(dispatcher)
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun getSearchMoviesPaging(query:String): Flow<PagingData<MovieDataModel>> {
+    override fun getSearchMoviesPaging(query: String): Flow<PagingData<MovieDataModel>> {
         return Pager(
             config = PagingConfig(
                 pageSize = MoviesRepository.NETWORK_PAGE_SIZE,
                 enablePlaceholders = true,
             ),
-            remoteMediator = SearchMovieRemoteMediator(moviesDatasource, movieDatabase,query),
+            remoteMediator = SearchMovieRemoteMediator(moviesDatasource, movieDatabase, query),
             pagingSourceFactory = { movieDatabase.movieDao.pagingSourceMovieEntity(Type.Movie.name) }
         ).flow.map {
             it.map {
                 it.asMovieDataModel(MediaType.Movie.TOP_RATED)
             }
-        }
+        }.flowOn(dispatcher)
     }
-
 }

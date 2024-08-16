@@ -15,24 +15,32 @@ import ir.atefehtaheri.movieapp.data.tvshowlist.remote.TvShowsDatasource
 import ir.atefehtaheri.movieapp.data.tvshowlist.remote.paging.SearchTvShowRemoteMediator
 import ir.atefehtaheri.movieapp.data.tvshowlist.remote.paging.TvShowRemoteMediator
 import ir.atefehtaheri.movieapp.data.tvshowlist.repository.models.asMovieListDataModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class NetworkTvShowsRepository @Inject constructor(
     private val tvShowsDatasource: TvShowsDatasource,
     private val movieDatabase: MovieDatabase,
-) : TvShowsRepository {
+    private val dispatcher: CoroutineDispatcher,
+
+    ) : TvShowsRepository {
 
     override suspend fun getFirstPageTvShowPager(mediaType: MediaType.TvShow): ResultStatus<List<MovieDataModel>> {
-
-        return when (val result = tvShowsDatasource.getTvShowPager(mediaType, 1)) {
-            is ResultStatus.Failure -> ResultStatus.Failure(result.exception_message)
-            is ResultStatus.Success -> ResultStatus.Success(
-                result.data?.asMovieListDataModel(
-                    mediaType
+        return withContext(dispatcher) {
+            ensureActive()
+            when (val result = tvShowsDatasource.getTvShowPager(mediaType, 1)) {
+                is ResultStatus.Failure -> ResultStatus.Failure(result.exception_message)
+                is ResultStatus.Success -> ResultStatus.Success(
+                    result.data?.asMovieListDataModel(
+                        mediaType
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -49,7 +57,7 @@ class NetworkTvShowsRepository @Inject constructor(
             it.map {
                 it.asMovieDataModel(mediaType)
             }
-        }
+        }.flowOn(dispatcher)
     }
 
     @OptIn(ExperimentalPagingApi::class)
@@ -65,7 +73,7 @@ class NetworkTvShowsRepository @Inject constructor(
             it.map {
                 it.asMovieDataModel(MediaType.TvShow.TOP_RATED)
             }
-        }
+        }.flowOn(dispatcher)
     }
 
 }

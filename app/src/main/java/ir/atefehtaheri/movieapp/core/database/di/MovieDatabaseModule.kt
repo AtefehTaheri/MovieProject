@@ -8,6 +8,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ir.atefehtaheri.movieapp.core.database.MovieDatabase
+import ir.atefehtaheri.movieapp.core.database.dao.FavoriteMovieDao
+import ir.atefehtaheri.movieapp.core.database.dao.MovieDao
+import ir.atefehtaheri.movieapp.core.database.dao.RemoteKeyDao
 import javax.inject.Singleton
 
 @Module
@@ -22,6 +25,22 @@ object MovieDatabaseModule {
             MovieDatabase::class.java,
            "MovieDataBase",
         ).build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideMovieDao(database: MovieDatabase): MovieDao {
+        return database.movieDao
+    }
+    @Singleton
+    @Provides
+    fun provideRemoteKeyDao(database: MovieDatabase): RemoteKeyDao {
+        return database.remoteKeyDao
+    }
+    @Singleton
+    @Provides
+    fun provideFavoriteMovieDao(database: MovieDatabase): FavoriteMovieDao {
+        return database.favoriteMovieDao
     }
 
 }

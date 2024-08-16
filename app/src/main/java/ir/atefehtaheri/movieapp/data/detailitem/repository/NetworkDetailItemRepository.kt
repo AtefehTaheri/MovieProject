@@ -8,28 +8,36 @@ import ir.atefehtaheri.movieapp.data.detailitem.repository.models.TvShowDetailDa
 import ir.atefehtaheri.movieapp.data.detailitem.repository.models.asMovieDetailDataModel
 import ir.atefehtaheri.movieapp.data.detailitem.repository.models.asTvShowDetailDataModel
 import ir.atefehtaheri.movieapp.data.favoritelist.local.FavoriteListDatasource
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class NetworkDetailItemRepository @Inject constructor(
     private val DetailItemDatasource: DetailItemDatasource,
-    private val favoriteListDatasource: FavoriteListDatasource
+    private val favoriteListDatasource: FavoriteListDatasource,
+    private val dispatcher: CoroutineDispatcher,
 ) : DetailItemRepository {
 
 
     override suspend fun getDetailMovie(movieid: Int): ResultStatus<MovieDetailDataModel> {
-        val result = DetailItemDatasource.getDetailMovie(movieid)
-        val resultIsFavoriteMovie = favoriteListDatasource.isFavoriteMovie(movieid)
-        return when (result) {
-            is ResultStatus.Failure -> ResultStatus.Failure(result.exception_message)
 
-            is ResultStatus.Success -> {
-                when (resultIsFavoriteMovie) {
-                    is ResultStatus.Failure -> ResultStatus.Failure(resultIsFavoriteMovie.exception_message)
-                    is ResultStatus.Success -> ResultStatus.Success(
-                        result.data?.asMovieDetailDataModel(
-                            resultIsFavoriteMovie.data!!
+        return withContext(dispatcher) {
+            ensureActive()
+            val result = DetailItemDatasource.getDetailMovie(movieid)
+            val resultIsFavoriteMovie = favoriteListDatasource.isFavoriteMovie(movieid)
+            when (result) {
+                is ResultStatus.Failure -> ResultStatus.Failure(result.exception_message)
+
+                is ResultStatus.Success -> {
+                    when (resultIsFavoriteMovie) {
+                        is ResultStatus.Failure -> ResultStatus.Failure(resultIsFavoriteMovie.exception_message)
+                        is ResultStatus.Success -> ResultStatus.Success(
+                            result.data?.asMovieDetailDataModel(
+                                resultIsFavoriteMovie.data!!
+                            )
                         )
-                    )
+                    }
                 }
             }
         }
