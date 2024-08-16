@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ir.atefehtaheri.movieapp.R
+import ir.atefehtaheri.movieapp.core.common.models.Type
 import ir.atefehtaheri.movieapp.core.designsystem.component.ShowError
 import ir.atefehtaheri.movieapp.data.detailitem.repository.models.MovieDetailDataModel
 import ir.atefehtaheri.movieapp.feature.detailscreen.DetailScreenViewModel
@@ -66,19 +67,31 @@ internal fun DetailMovie(
     if (detailState.errorMessage != null) {
         ShowError(detailState.errorMessage!!)
     } else {
-        DetailMovieScreen(modifier, detailState)
+
+
+
+        DetailMovieScreen(modifier, detailState) {
+            detailState.MovieDetailDataModel?.let {
+                if (it.isFavorite) {
+                    detailScreenViewModel.removeFavoriteList(Type.Movie,it.id)
+                }else{
+                    detailScreenViewModel.addToFavoriteList(Type.Movie)
+                }
+            }
+        }
     }
 }
 
 @Composable
 private fun DetailMovieScreen(
     modifier: Modifier = Modifier,
-    detailState: DetailState
+    detailState: DetailState,
+    clickOnFavorite:()->Unit
 ) {
 
     when {
         detailState.loading -> LoadingState(modifier)
-        else -> ShowListState(modifier, detailState.MovieDetailDataModel!!)
+        else -> ShowListState(modifier, detailState.MovieDetailDataModel!!,clickOnFavorite)
     }
 }
 
@@ -103,6 +116,7 @@ private fun LoadingState(
 private fun ShowListState(
     modifier: Modifier = Modifier,
     movieDetailDataModel: MovieDetailDataModel,
+    clickOnFavorite:()->Unit
 ) {
 
     BoxWithConstraints {
@@ -119,7 +133,9 @@ private fun ShowListState(
                 movieDetailDataModel.poster_path,
                 movieDetailDataModel.title,
                 movieDetailDataModel.status,
-                movieDetailDataModel.images
+                movieDetailDataModel.images,
+                movieDetailDataModel.isFavorite,
+                clickOnFavorite = clickOnFavorite
             )
             MovieMetadataView(movieDetailDataModel)
 

@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ir.atefehtaheri.movieapp.R
+import ir.atefehtaheri.movieapp.core.common.models.Type
 import ir.atefehtaheri.movieapp.core.designsystem.component.ShowError
 import ir.atefehtaheri.movieapp.data.detailitem.repository.models.TvShowDetailDataModel
 import ir.atefehtaheri.movieapp.feature.detailscreen.DetailScreenViewModel
@@ -63,7 +64,17 @@ internal fun DetailTvShow(
     if (detailState.errorMessage != null) {
         ShowError(detailState.errorMessage!!)
     } else {
-        DetailTvShowScreen(modifier, detailState)
+        DetailTvShowScreen(modifier, detailState){
+            detailState.tvShowDetailDataModel?.let {
+                if (it.isFavorite) {
+                    detailScreenViewModel.removeFavoriteList(Type.TvShow,it.id)
+                }else{
+                    detailScreenViewModel.addToFavoriteList(Type.TvShow)
+                }
+            }
+
+
+        }
     }
 
 
@@ -72,12 +83,13 @@ internal fun DetailTvShow(
 @Composable
 private fun DetailTvShowScreen(
     modifier: Modifier = Modifier,
-    detailState: DetailState
+    detailState: DetailState,
+    clickOnFavorite:()->Unit
 ) {
 
     when {
         detailState.loading -> LoadingState(modifier)
-        else -> ShowListState(modifier, detailState.tvShowDetailDataModel!!)
+        else -> ShowListState(modifier, detailState.tvShowDetailDataModel!!,clickOnFavorite)
     }
 }
 
@@ -102,6 +114,7 @@ private fun LoadingState(
 private fun ShowListState(
     modifier: Modifier = Modifier,
     tvShowDetailDataModel: TvShowDetailDataModel,
+    clickOnFavorite:()->Unit
 ) {
     BoxWithConstraints {
         val screenHeight = maxHeight
@@ -116,7 +129,9 @@ private fun ShowListState(
                 tvShowDetailDataModel.poster_path,
                 tvShowDetailDataModel.name,
                 tvShowDetailDataModel.status,
-                tvShowDetailDataModel.images
+                tvShowDetailDataModel.images,
+                tvShowDetailDataModel.isFavorite,
+                clickOnFavorite = clickOnFavorite
             )
             TvShowMetadataView(tvShowDetailDataModel)
 
