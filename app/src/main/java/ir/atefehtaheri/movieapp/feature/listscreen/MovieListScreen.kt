@@ -46,6 +46,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import ir.atefehtaheri.movieapp.R
 import ir.atefehtaheri.movieapp.core.common.models.MediaType
+import ir.atefehtaheri.movieapp.core.common.models.Type
 import ir.atefehtaheri.movieapp.core.designsystem.component.ShowError
 import ir.atefehtaheri.movieapp.data.movieslist.repository.models.MovieDataModel
 import kotlinx.coroutines.CoroutineScope
@@ -54,7 +55,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 internal fun MovieListRoute(
-    onItemClick: (MediaType, id: String, NavOptions?) -> Unit,
+    onItemClick: (Type, id: Int, NavOptions?) -> Unit,
     modifier: Modifier = Modifier,
     movieViewModel: MovieViewModel = hiltViewModel(),
     mediaTypeMovie: MediaType.Movie,
@@ -79,7 +80,7 @@ internal fun MovieListRoute(
 private fun MovieListScreen(
     movies: LazyPagingItems<MovieDataModel>,
     tvShows: LazyPagingItems<MovieDataModel>,
-    onItemClick: (MediaType, String, NavOptions?) -> Unit,
+    onItemClick: (Type, Int, NavOptions?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when {
@@ -119,7 +120,7 @@ fun LoadingState(modifier: Modifier = Modifier) {
 fun ShowListScreen(
     movies: LazyPagingItems<MovieDataModel>,
     tvshow: LazyPagingItems<MovieDataModel>,
-    onItemClick: (MediaType, String, NavOptions?) -> Unit,
+    onItemClick: (Type, Int, NavOptions?) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -207,7 +208,7 @@ private enum class InformationTabs(val text: String) {
 @Composable
 private fun PageContent_Movie(
     movies: LazyPagingItems<MovieDataModel>,
-    onItemClick: (MediaType, String, NavOptions?) -> Unit,
+    onItemClick: (Type, Int, NavOptions?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
@@ -278,7 +279,7 @@ private fun PageContent_Movie(
 @Composable
 private fun PageContent_Tvshow(
     tvshow: LazyPagingItems<MovieDataModel>,
-    onItemClick: (MediaType, String, NavOptions?) -> Unit,
+    onItemClick: (Type, Int, NavOptions?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()

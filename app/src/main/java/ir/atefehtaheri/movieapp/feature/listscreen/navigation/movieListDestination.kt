@@ -7,6 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import ir.atefehtaheri.movieapp.core.common.models.MediaType
+import ir.atefehtaheri.movieapp.core.common.models.Type
 import ir.atefehtaheri.movieapp.feature.listscreen.MovieListRoute
 
 const val MovieListRoute =
@@ -25,8 +26,7 @@ fun NavController.navigateToMovieList(
 }
 
 fun NavGraphBuilder.movieListDestination(
-    onItemClick: (MediaType, String, NavOptions?) -> Unit
-
+    onItemClick: (Type, Int, NavOptions?) -> Unit
 ) {
     composable(route = MovieListRoute,
         arguments = listOf(

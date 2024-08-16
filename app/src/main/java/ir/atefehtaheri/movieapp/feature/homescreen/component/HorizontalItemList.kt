@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavOptions
 import ir.atefehtaheri.movieapp.R
 import ir.atefehtaheri.movieapp.core.common.models.MediaType
+import ir.atefehtaheri.movieapp.core.common.models.Type
 import ir.atefehtaheri.movieapp.data.movieslist.repository.models.MovieDataModel
 import ir.atefehtaheri.movieapp.feature.homescreen.uistate.PagerState
 
@@ -23,8 +24,8 @@ import ir.atefehtaheri.movieapp.feature.homescreen.uistate.PagerState
 @Composable
 internal fun HorizontalItemList(
     state: PagerState,
-    mediaType: MediaType,
-    onItemClick: (MediaType, String, NavOptions?) -> Unit,
+    mediaType: Type,
+    onItemClick: (Type, Int, NavOptions?) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -36,7 +37,7 @@ internal fun HorizontalItemList(
         Text(
             modifier = Modifier
                 .padding(horizontal = 20.dp, vertical = 10.dp),
-            text = if (mediaType is MediaType.TvShow) "TvShows" else "Movies",
+            text = if (mediaType == Type.TvShow) "TvShows" else "Movies",
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onPrimary,
         )
@@ -71,7 +72,7 @@ private fun LoadingState(
 @Composable
 private fun ShowListState(
     listData: List<MovieDataModel>?,
-    onItemClick: (MediaType, String, NavOptions?) -> Unit,
+    onItemClick: (Type, Int, NavOptions?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     listData?.let { list ->

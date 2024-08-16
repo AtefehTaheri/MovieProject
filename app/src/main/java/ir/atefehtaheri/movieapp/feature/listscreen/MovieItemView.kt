@@ -40,13 +40,14 @@ import coil.request.ImageRequest
 import ir.atefehtaheri.movieapp.R
 import ir.atefehtaheri.movieapp.core.common.BASE_URL
 import ir.atefehtaheri.movieapp.core.common.models.MediaType
+import ir.atefehtaheri.movieapp.core.common.models.Type
 import ir.atefehtaheri.movieapp.data.movieslist.repository.models.MovieDataModel
 
 
 @Composable
 internal fun MovieItemView(
     movieDataModel : MovieDataModel,
-    onItemClick:(MediaType, String, NavOptions?) -> Unit
+    onItemClick:(Type, Int, NavOptions?) -> Unit
 
     ) {
 
@@ -55,8 +56,8 @@ internal fun MovieItemView(
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
             .clickable {
-                onItemClick(movieDataModel.media_type,
-                    movieDataModel.id.toString(),
+                onItemClick(movieDataModel.media_type.type,
+                    movieDataModel.id,
                     navOptions {
                         restoreState = true
                     })

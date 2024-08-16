@@ -35,6 +35,7 @@ import coil.request.ImageRequest
 import ir.atefehtaheri.movieapp.R
 import ir.atefehtaheri.movieapp.core.common.BASE_URL
 import ir.atefehtaheri.movieapp.core.common.models.MediaType
+import ir.atefehtaheri.movieapp.core.common.models.Type
 import ir.atefehtaheri.movieapp.core.designsystem.component.shimmerEffect
 import ir.atefehtaheri.movieapp.data.movieslist.repository.models.MovieDataModel
 
@@ -43,7 +44,7 @@ import ir.atefehtaheri.movieapp.data.movieslist.repository.models.MovieDataModel
 fun ItemCard(
     movieItem: MovieDataModel?,
     loading: Boolean = true,
-    onItemClick: (MediaType, String, NavOptions?) -> Unit = { _, _, _ -> }
+    onItemClick: (Type, Int, NavOptions?) -> Unit = { _, _, _ -> }
 ) {
 
     ElevatedCard(
@@ -55,8 +56,8 @@ fun ItemCard(
             .clickable {
                 movieItem?.let {
                     onItemClick(
-                        movieItem.media_type,
-                        movieItem.id.toString(),
+                        movieItem.media_type.type,
+                        movieItem.id,
                         null
                     )
                 }

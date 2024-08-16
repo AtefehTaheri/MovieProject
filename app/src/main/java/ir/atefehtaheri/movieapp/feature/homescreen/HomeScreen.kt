@@ -29,6 +29,7 @@ import androidx.navigation.NavOptions
 import ir.atefehtaheri.homescreen.components.UpcomingPager
 import ir.atefehtaheri.movieapp.R
 import ir.atefehtaheri.movieapp.core.common.models.MediaType
+import ir.atefehtaheri.movieapp.core.common.models.Type
 import ir.atefehtaheri.movieapp.core.designsystem.component.ShowError
 import ir.atefehtaheri.movieapp.feature.homescreen.component.HorizontalItemList
 import ir.atefehtaheri.movieapp.feature.homescreen.uistate.errorMessage
@@ -36,7 +37,7 @@ import ir.atefehtaheri.movieapp.feature.homescreen.uistate.errorMessage
 @Composable
 fun HomeScreen(
     navToShowList: (MediaType.Movie, MediaType.TvShow, NavOptions?) -> Unit,
-    onItemClick: (MediaType, String, NavOptions?) -> Unit,
+    onItemClick: (Type, Int, NavOptions?) -> Unit,
     homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
 ) {
     val scrollstate = rememberScrollState()
@@ -76,12 +77,12 @@ fun HomeScreen(
             }
             HorizontalItemList(
                 homeUiState.movies.get(MediaType.Movie.NOW_PLAYING)!!,
-                MediaType.Movie.NOW_PLAYING,
+                Type.Movie,
                 onItemClick
             )
             HorizontalItemList(
                 homeUiState.tvShows.get(MediaType.TvShow.Airing)!!,
-                MediaType.TvShow.Airing,
+                Type.TvShow,
                 onItemClick,
 
                 )
@@ -97,12 +98,12 @@ fun HomeScreen(
 
             HorizontalItemList(
                 homeUiState.movies.get(MediaType.Movie.TOP_RATED)!!,
-                MediaType.Movie.TOP_RATED,
+                Type.Movie,
                 onItemClick
             )
             HorizontalItemList(
                 homeUiState.tvShows.get(MediaType.TvShow.TOP_RATED)!!,
-                MediaType.TvShow.TOP_RATED,
+                Type.TvShow,
                 onItemClick
             )
             Spacer(modifier = Modifier.height(10.dp))

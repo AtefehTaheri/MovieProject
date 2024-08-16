@@ -44,6 +44,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import ir.atefehtaheri.movieapp.R
 import ir.atefehtaheri.movieapp.core.common.models.MediaType
+import ir.atefehtaheri.movieapp.core.common.models.Type
 import ir.atefehtaheri.movieapp.core.designsystem.component.ShowError
 import ir.atefehtaheri.movieapp.data.movieslist.repository.models.MovieDataModel
 import ir.atefehtaheri.movieapp.feature.listscreen.LoadingState
@@ -51,7 +52,7 @@ import ir.atefehtaheri.movieapp.feature.listscreen.ShowListScreen
 
 @Composable
 internal fun SearchScreenRoute(
-    onItemClick: (MediaType, String, NavOptions?) -> Unit,
+    onItemClick: (Type, Int, NavOptions?) -> Unit,
     searchViewModel: SearchViewModel = hiltViewModel(),
     modifier: Modifier = Modifier,
 ) {
@@ -80,7 +81,7 @@ fun SearchScreen(
     searchQuery: String,
     isSearching: Boolean = false,
     updateQuery: (String) -> Unit,
-    onItemClick: (MediaType, String, NavOptions?) -> Unit,
+    onItemClick: (Type, Int, NavOptions?) -> Unit,
     modifier: Modifier = Modifier
 
 ) {

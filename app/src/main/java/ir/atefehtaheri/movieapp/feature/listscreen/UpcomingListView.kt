@@ -17,6 +17,7 @@ import androidx.navigation.NavOptions
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import ir.atefehtaheri.movieapp.core.common.models.MediaType
+import ir.atefehtaheri.movieapp.core.common.models.Type
 import ir.atefehtaheri.movieapp.core.designsystem.component.ShowError
 import ir.atefehtaheri.movieapp.data.movieslist.repository.models.MovieDataModel
 
@@ -24,7 +25,7 @@ import ir.atefehtaheri.movieapp.data.movieslist.repository.models.MovieDataModel
 @Composable
 fun UpcomingListScreen(
     movies: LazyPagingItems<MovieDataModel>,
-    onItemClick: (MediaType, String, NavOptions?) -> Unit,
+    onItemClick: (Type, Int, NavOptions?) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -41,7 +42,7 @@ fun UpcomingListScreen(
 @Composable
 private fun ShowListScreen(
     movies: LazyPagingItems<MovieDataModel>,
-    onItemClick: (MediaType, String, NavOptions?) -> Unit,
+    onItemClick: (Type, Int, NavOptions?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()

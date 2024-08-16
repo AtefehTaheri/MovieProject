@@ -34,6 +34,7 @@ import com.tbuonomo.viewpagerdotsindicator.compose.type.ShiftIndicatorType
 import ir.atefehtaheri.movieapp.R
 import ir.atefehtaheri.movieapp.core.common.BASE_URL
 import ir.atefehtaheri.movieapp.core.common.models.MediaType
+import ir.atefehtaheri.movieapp.core.common.models.Type
 import ir.atefehtaheri.movieapp.core.designsystem.component.shimmerEffect
 import ir.atefehtaheri.movieapp.data.movieslist.repository.models.MovieDataModel
 import ir.atefehtaheri.movieapp.feature.homescreen.uistate.PagerState
@@ -41,7 +42,7 @@ import ir.atefehtaheri.movieapp.feature.homescreen.uistate.PagerState
 
 @Composable
 internal fun UpcomingPager(
-    onItemClick: (MediaType, String, NavOptions?) -> Unit,
+    onItemClick: (Type, Int, NavOptions?) -> Unit,
     state: PagerState,
     modifier: Modifier = Modifier,
 
@@ -67,7 +68,7 @@ private fun LoadingState(modifier: Modifier = Modifier) {
 @Composable
 private fun ShowListState(
     upcominglist: List<MovieDataModel>?,
-    onItemClick: (MediaType, String, NavOptions?) -> Unit,
+    onItemClick: (Type, Int, NavOptions?) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -111,8 +112,8 @@ private fun ShowListState(
                                 .aspectRatio(2 / 1f)
                                 .clickable {
                                     onItemClick(
-                                        upcominglist[page].media_type,
-                                        upcominglist[page].id.toString(),
+                                        upcominglist[page].media_type.type,
+                                        upcominglist[page].id,
                                         null
                                     )
                                 },
