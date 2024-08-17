@@ -1,6 +1,5 @@
 package ir.atefehtaheri.movieapp.feature.listscreen
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -25,12 +24,10 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,17 +40,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavOptions
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.log
+import androidx.window.layout.DisplayFeature
+import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
+import com.google.accompanist.adaptive.TwoPane
 import ir.atefehtaheri.movieapp.R
+import ir.atefehtaheri.movieapp.core.common.models.AppContentType
 import ir.atefehtaheri.movieapp.core.common.models.MediaType
 import ir.atefehtaheri.movieapp.core.common.models.Type
 import ir.atefehtaheri.movieapp.core.designsystem.component.ShowError
 import ir.atefehtaheri.movieapp.data.movieslist.repository.models.MovieDataModel
+import ir.atefehtaheri.movieapp.feature.detailscreen.DetailScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -64,19 +64,92 @@ internal fun MovieListRoute(
     modifier: Modifier = Modifier,
     movieViewModel: MovieViewModel = hiltViewModel(),
     mediaTypeMovie: MediaType.Movie,
-    mediaTypeTvShow: MediaType.TvShow
-
+    mediaTypeTvShow: MediaType.TvShow,
+    displayFeatures: List<DisplayFeature>,
+    contentType: AppContentType
 ) {
 
     movieViewModel.updateType(mediaTypeMovie, mediaTypeTvShow)
     val movies = movieViewModel.movies.collectAsLazyPagingItems()
     val tvShows = movieViewModel.tvShows.collectAsLazyPagingItems()
 
-    when (mediaTypeMovie) {
-        MediaType.Movie.UPCOMING -> UpcomingListScreen(movies, onItemClick,modifier)
-        else -> MovieListScreen(movies, tvShows, onItemClick,modifier)
+    when (contentType) {
+        AppContentType.SINGLE_PANE -> {
+            when (mediaTypeMovie) {
+                MediaType.Movie.UPCOMING -> UpcomingListScreen(movies, onItemClick, modifier)
+                else -> MovieListScreen(movies, tvShows, onItemClick, modifier)
+            }
+        }
+
+        AppContentType.DUAL_PANE -> {
+            LargeScreenListScreen(mediaTypeMovie,movies, tvShows, modifier, displayFeatures)
+        }
     }
 }
+
+@Composable
+fun LargeScreenListScreen(
+    mediaTypeMovie: MediaType.Movie,
+    movies: LazyPagingItems<MovieDataModel>,
+    tvshow: LazyPagingItems<MovieDataModel>,
+    modifier: Modifier = Modifier,
+    displayFeatures: List<DisplayFeature>
+) {
+
+    when {
+        movies.loadState.refresh is LoadState.Error -> ShowError(
+            (movies.loadState.refresh as LoadState.Error).error.message ?: ""
+        )
+
+        tvshow.loadState.refresh is LoadState.Error -> ShowError(
+            (tvshow.loadState.refresh as LoadState.Error).error.message ?: ""
+        )
+
+        movies.loadState.refresh is LoadState.Loading -> LoadingState(modifier)
+        tvshow.loadState.refresh is LoadState.Loading -> LoadingState(modifier)
+
+
+        else -> {
+            var type by remember { mutableStateOf(Type.Movie) }
+            var id by remember { mutableStateOf<Int?>(null) }
+            if (movies.itemCount != 0) {
+                id = movies.get(0)?.id
+            }
+
+
+            TwoPane(
+                first = {
+                    when(mediaTypeMovie){
+                        MediaType.Movie.UPCOMING -> ShowListScreen(
+                            movies,
+                            { typep, idp, _ ->
+                                type = typep
+                                id = idp
+                            },
+                            modifier
+                        )
+                        else ->  ShowListScreen(
+                            movies,
+                            tvshow,
+                            { typep, idp, _ ->
+                                type = typep
+                                id = idp
+                            },
+                            modifier
+                        )
+                    }
+                },
+                second = {
+                    DetailScreen(type, id)
+                },
+                strategy = HorizontalTwoPaneStrategy(splitFraction = 0.5f, gapWidth = 5.dp),
+                displayFeatures = displayFeatures
+            )
+        }
+    }
+
+}
+
 
 @Composable
 private fun MovieListScreen(
@@ -101,6 +174,7 @@ private fun MovieListScreen(
         else -> ShowListScreen(movies, tvShows, onItemClick, modifier)
     }
 }
+
 
 @Composable
 fun LoadingState(modifier: Modifier = Modifier) {
@@ -128,12 +202,12 @@ fun ShowListScreen(
 
 
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
-    val tabs = rememberSaveable { InformationTabs.entries }
+    val tabs = InformationTabs.entries
     val pagerState = rememberPagerState(pageCount = tabs::size)
-    val selectedTabIndex = rememberSaveable { mutableStateOf(pagerState.currentPage) }
-    LaunchedEffect(pagerState.currentPage) {
-        selectedTabIndex.value = pagerState.currentPage
-    }
+    val selectedTabIndex = pagerState.currentPage
+//    LaunchedEffect(pagerState.currentPage) {
+//        selectedTabIndex = pagerState.currentPage
+//    }
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -158,7 +232,7 @@ fun ShowListScreen(
                 .background(Color.Black.copy(alpha = 0.5f))
         ) {
 
-            TabRow(selectedTabIndex = selectedTabIndex.value,
+            TabRow(selectedTabIndex = selectedTabIndex,
                 containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -170,7 +244,7 @@ fun ShowListScreen(
             ) {
                 tabs.forEachIndexed { index, currentTab ->
                     Tab(
-                        modifier = if (selectedTabIndex.value == index) Modifier
+                        modifier = if (selectedTabIndex == index) Modifier
                             .clip(RoundedCornerShape(50))
                             .background(
                                 MaterialTheme.colorScheme.secondaryContainer
@@ -182,7 +256,7 @@ fun ShowListScreen(
                             ),
 
 
-                        selected = selectedTabIndex.value == index,
+                        selected = selectedTabIndex == index,
                         selectedContentColor = MaterialTheme.colorScheme.primaryContainer,
                         unselectedContentColor = MaterialTheme.colorScheme.outline,
                         onClick = {

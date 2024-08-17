@@ -18,6 +18,7 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.window.layout.DisplayFeature
 import ir.atefehtaheri.movieapp.core.common.models.AppNavigationType
 import ir.atefehtaheri.movieapp.navigation.MovieBottomBar
 import ir.atefehtaheri.movieapp.navigation.MovieNavHost
@@ -26,8 +27,10 @@ import ir.atefehtaheri.movieapp.navigation.MovieNavRail
 @Composable
 fun MovieApp(
     windowSizeClass: WindowSizeClass,
+    displayFeatures: List<DisplayFeature>,
     appState: MovieAppState = rememberMyAppState(
-        windowSizeClass = windowSizeClass
+        windowSizeClass = windowSizeClass,
+        displayFeatures = displayFeatures
     )
 ) {
 

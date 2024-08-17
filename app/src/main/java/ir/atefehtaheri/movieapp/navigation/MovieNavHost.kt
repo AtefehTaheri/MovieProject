@@ -31,7 +31,7 @@ fun MovieNavHost(
             onItemClick = navController::navigateToDetailScreen
         )
         detailscreenDestination()
-        movieListDestination(onItemClick = navController::navigateToDetailScreen)
+        movieListDestination(onItemClick = navController::navigateToDetailScreen,appState.displayFeatures,appState.contentType)
         searchScreenDestination(onItemClick = navController::navigateToDetailScreen)
         FavoriteScreenRoute(onItemClick = navController::navigateToDetailScreen)
 

@@ -6,6 +6,8 @@ import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.window.layout.DisplayFeature
+import ir.atefehtaheri.movieapp.core.common.models.AppContentType
 import ir.atefehtaheri.movieapp.core.common.models.MediaType
 import ir.atefehtaheri.movieapp.core.common.models.Type
 import ir.atefehtaheri.movieapp.feature.listscreen.MovieListRoute
@@ -26,7 +28,9 @@ fun NavController.navigateToMovieList(
 }
 
 fun NavGraphBuilder.movieListDestination(
-    onItemClick: (Type, Int, NavOptions?) -> Unit
+    onItemClick: (Type, Int, NavOptions?) -> Unit,
+    displayFeatures: List<DisplayFeature>,
+    contentType: AppContentType
 ) {
     composable(route = MovieListRoute,
         arguments = listOf(
@@ -57,7 +61,9 @@ fun NavGraphBuilder.movieListDestination(
         MovieListRoute(
             onItemClick = onItemClick,
             mediaTypeMovie = mediaTypeMovie,
-            mediaTypeTvShow = mediaTypeTvshow
+            mediaTypeTvShow = mediaTypeTvshow,
+            displayFeatures=displayFeatures,
+            contentType=contentType
         )
 
     }

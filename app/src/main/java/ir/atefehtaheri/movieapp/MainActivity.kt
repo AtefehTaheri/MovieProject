@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import com.google.accompanist.adaptive.calculateDisplayFeatures
 import dagger.hilt.android.AndroidEntryPoint
 import ir.atefehtaheri.movieapp.core.designsystem.theme.MovieAppTheme
 import ir.atefehtaheri.movieapp.ui.MovieApp
@@ -17,7 +18,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MovieAppTheme {
-                MovieApp(windowSizeClass = calculateWindowSizeClass(this))
+                MovieApp(
+                    windowSizeClass = calculateWindowSizeClass(this),
+                    displayFeatures = calculateDisplayFeatures(this)
+                )
             }
         }
     }

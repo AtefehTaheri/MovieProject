@@ -40,7 +40,7 @@ fun UpcomingListScreen(
 }
 
 @Composable
-private fun ShowListScreen(
+fun ShowListScreen(
     movies: LazyPagingItems<MovieDataModel>,
     onItemClick: (Type, Int, NavOptions?) -> Unit,
     modifier: Modifier = Modifier

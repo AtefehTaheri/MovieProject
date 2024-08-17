@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import androidx.window.layout.DisplayFeature
 import ir.atefehtaheri.movieapp.core.common.models.AppContentType
 import ir.atefehtaheri.movieapp.core.common.models.AppNavigationType
 import ir.atefehtaheri.movieapp.feature.favoritescreen.navigation.FavoriteScreenRoute
@@ -24,16 +25,19 @@ import ir.atefehtaheri.movieapp.navigation.TopLevelDestination
 @Composable
 fun rememberMyAppState(
     windowSizeClass: WindowSizeClass,
+    displayFeatures: List<DisplayFeature>,
     navController: NavHostController = rememberNavController(),
 
     ): MovieAppState {
     return remember(
         navController,
         windowSizeClass,
+        displayFeatures
     ) {
         MovieAppState(
             navController,
-            windowSizeClass
+            windowSizeClass,
+            displayFeatures
         )
     }
 }
@@ -42,6 +46,7 @@ fun rememberMyAppState(
 class MovieAppState(
     val navController: NavHostController,
     val windowSizeClass: WindowSizeClass,
+    val displayFeatures: List<DisplayFeature>,
 ) {
 
     val navigationType: AppNavigationType

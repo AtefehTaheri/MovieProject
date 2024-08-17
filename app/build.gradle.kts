@@ -115,5 +115,6 @@ dependencies {
     implementation(libs.paging.compose)
 
     implementation(libs.accompanist.pager)
+    implementation(libs.accompanist.adaptive)
 
 }
