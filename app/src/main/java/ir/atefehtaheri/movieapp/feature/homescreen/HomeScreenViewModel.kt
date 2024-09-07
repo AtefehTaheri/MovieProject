@@ -47,11 +47,11 @@ class HomeScreenViewModel @Inject constructor(
 
     private fun getDataMovie(mediaType: MediaType.Movie) {
         viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    movies = it.movies + (mediaType to PagerState()),
-                )
-            }
+//            _uiState.update {
+//                it.copy(
+//                    movies = it.movies + (mediaType to PagerState()),
+//                )
+//            }
             val response = moviesRepository.getFirstPageMoviesPager(mediaType)
             when (response) {
                 is ResultStatus.Failure ->
@@ -81,11 +81,11 @@ class HomeScreenViewModel @Inject constructor(
 
     private fun getDataTvShow(mediaType: MediaType.TvShow) {
         viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    tvShows = it.tvShows + (mediaType to PagerState()),
-                )
-            }
+//            _uiState.update {
+//                it.copy(
+//                    tvShows = it.tvShows + (mediaType to PagerState()),
+//                )
+//            }
             val response = tvShowRepository.getFirstPageTvShowPager(mediaType)
             when (response) {
                 is ResultStatus.Failure ->

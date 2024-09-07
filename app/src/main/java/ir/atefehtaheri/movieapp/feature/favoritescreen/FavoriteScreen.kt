@@ -24,9 +24,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -34,16 +32,10 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SuggestionChip
-import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -66,7 +58,6 @@ import ir.atefehtaheri.movieapp.core.common.models.Type
 import ir.atefehtaheri.movieapp.core.designsystem.component.ShowError
 import ir.atefehtaheri.movieapp.data.favoritelist.local.models.FavoriteMovie
 import ir.atefehtaheri.movieapp.feature.favoritescreen.uistate.FilterType
-import ir.atefehtaheri.movieapp.feature.listscreen.MovieItemView
 
 
 @Composable
@@ -122,7 +113,7 @@ private fun ShowListScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primaryContainer)
     ) {
-        Column (Modifier.fillMaxSize()){
+        Column(Modifier.fillMaxSize()) {
             FilterChipView(filterType, onFilterClick)
 
             AnimatedVisibility(visible = favoriteMovies.isEmpty()) {
@@ -174,11 +165,13 @@ private fun ShowListScreen(
 private fun FilterChipView(
     filterType: FilterType,
     onFilterClick: (FilterType) -> Unit,
-    modifier: Modifier=Modifier
+    modifier: Modifier = Modifier
 ) {
 
-    LazyRow(modifier=modifier.padding(20.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+    LazyRow(
+        modifier = modifier.padding(20.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
         items(FilterType.values()) { filterItem ->
 
             FilterChip(
@@ -193,7 +186,7 @@ private fun FilterChipView(
                             imageVector = Icons.Filled.Done,
                             contentDescription = "Done icon",
                             modifier = Modifier.size(FilterChipDefaults.IconSize),
-                            tint =  MaterialTheme.colorScheme.onPrimary
+                            tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 } else {

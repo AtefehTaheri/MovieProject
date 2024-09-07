@@ -49,7 +49,6 @@ class NetworkDetailItemRepository @Inject constructor(
 
         return when (result) {
             is ResultStatus.Failure -> ResultStatus.Failure(result.exception_message)
-
             is ResultStatus.Success -> {
                 when (resultIsFavoriteTvShow) {
                     is ResultStatus.Failure -> ResultStatus.Failure(resultIsFavoriteTvShow.exception_message)

@@ -74,16 +74,14 @@ private fun ShowListState(
 
     upcominglist?.let {
 
-        val pagerState =
-            rememberPagerState(pageCount = { upcominglist.size })
+        val pagerState = rememberPagerState(pageCount = { upcominglist.size })
         Box(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(20.dp)
         ) {
             ElevatedCard(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 elevation = CardDefaults.cardElevation(
                     defaultElevation = dimensionResource(id = R.dimen.card_Elevation)
                 ),

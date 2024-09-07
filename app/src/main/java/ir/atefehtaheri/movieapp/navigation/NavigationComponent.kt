@@ -43,13 +43,13 @@ fun MovieBottomBar(
                 icon = {
                     Icon(
                         imageVector = destination.unselectedIcon,
-                        contentDescription = null,
+                        contentDescription = stringResource(id = destination.titleTextId),
                     )
                 },
                 selectedIcon = {
                     Icon(
                         imageVector = destination.selectedIcon,
-                        contentDescription = null,
+                        contentDescription = stringResource(id = destination.titleTextId),
                     )
                 },
                 label = { Text(stringResource(destination.iconTextId)) },

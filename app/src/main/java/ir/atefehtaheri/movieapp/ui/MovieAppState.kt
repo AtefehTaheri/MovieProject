@@ -81,6 +81,11 @@ class MovieAppState(
         @Composable get() =
             navigationType != AppNavigationType.NAVIGATION_RAIL && currentTopLevelDestination != null
 
+    val shouldShowNavRail: Boolean
+        @Composable get() =
+            navigationType == AppNavigationType.NAVIGATION_RAIL && currentTopLevelDestination != null
+
+
     val currentDestination: NavDestination?
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination

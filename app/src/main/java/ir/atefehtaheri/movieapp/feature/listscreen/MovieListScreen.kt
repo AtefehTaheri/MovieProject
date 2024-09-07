@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -122,18 +123,18 @@ fun LargeScreenListScreen(
                     when(mediaTypeMovie){
                         MediaType.Movie.UPCOMING -> ShowListScreen(
                             movies,
-                            { typep, idp, _ ->
-                                type = typep
-                                id = idp
+                            { typeParam, idParam, _ ->
+                                type = typeParam
+                                id = idParam
                             },
                             modifier
                         )
                         else ->  ShowListScreen(
                             movies,
                             tvshow,
-                            { typep, idp, _ ->
-                                type = typep
-                                id = idp
+                            { typeParam, idParam, _ ->
+                                type = typeParam
+                                id = idParam
                             },
                             modifier
                         )
@@ -325,6 +326,18 @@ private fun PageContent_Movie(
                         CircularProgressIndicator()
                     }
                 }
+                item {
+                    if (movies.loadState.append is LoadState.Error) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = stringResource(id = R.string.append_error_message),
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.error,
+                                textAlign = TextAlign.Center )
+                        }
+                        
+                    }
+                }
             }
         }
         AnimatedVisibility(visible = movies.itemCount == 0) {
@@ -392,6 +405,18 @@ private fun PageContent_Tvshow(
                 item {
                     if (tvshow.loadState.append is LoadState.Loading) {
                         CircularProgressIndicator()
+                    }
+                }
+                item {
+                    if (tvshow.loadState.append is LoadState.Error) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = stringResource(id = R.string.append_error_message),
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.error,
+                                textAlign = TextAlign.Center )
+                        }
+
                     }
                 }
             }

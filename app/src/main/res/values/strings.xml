@@ -40,6 +40,7 @@
     <string name="not_found_tvshow">TvShow not found</string>
     <string name="search_button">Search Button</string>
     <string name="empty_state_search">Search for Movies and TvShow</string>
-    <string name="erroe_message">Search Button</string>
+    <string name="error_message">Search Button</string>
+    <string name="append_error_message">An error occurred while loading more items</string>
 
 </resources>

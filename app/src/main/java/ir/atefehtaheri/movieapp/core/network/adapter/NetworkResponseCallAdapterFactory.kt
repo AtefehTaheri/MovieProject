@@ -8,7 +8,7 @@ import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
 class NetworkResponseCallAdapterFactory:CallAdapter.Factory() {
-    override fun get(
+        override fun get(
         returnType: Type,
         annotations: Array<out Annotation>,
         retrofit: Retrofit
@@ -46,4 +46,6 @@ class NetworkResponseCallAdapterFactory:CallAdapter.Factory() {
         @JvmStatic
         fun create(): NetworkResponseCallAdapterFactory = NetworkResponseCallAdapterFactory()
     }
+
+
 }

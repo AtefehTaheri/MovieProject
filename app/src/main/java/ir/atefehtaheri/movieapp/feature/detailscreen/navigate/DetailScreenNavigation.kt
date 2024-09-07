@@ -20,7 +20,8 @@ fun NavController.navigateToDetailScreen(
     this.navigate(
         DetailScreenRoute
             .replace("{id}", id.toString())
-            .replace("{type}", type.name), navOptions
+            .replace("{type}", type.name),
+        navOptions
     )
 }
 

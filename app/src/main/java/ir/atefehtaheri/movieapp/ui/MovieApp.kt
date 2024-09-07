@@ -34,35 +34,34 @@ fun MovieApp(
     )
 ) {
 
-    when (appState.navigationType) {
-        AppNavigationType.BOTTOM_NAVIGATION, AppNavigationType.PERMANENT_NAVIGATION_DRAWER -> {
-            MovieScaffold(
-                appState,
-                true,
-            )
-        }
+//    when (appState.navigationType) {
+//        AppNavigationType.BOTTOM_NAVIGATION, AppNavigationType.PERMANENT_NAVIGATION_DRAWER -> {
+//            MovieScaffold(
+//                appState,
+////                false,
+//            )
+//        }
+//
+//        AppNavigationType.NAVIGATION_RAIL -> {
+//            MovieScaffold(
+//                appState,
+////                true,
+//            )
+//        }
+//    }
 
-        AppNavigationType.NAVIGATION_RAIL -> {
-            MovieScaffold(
-                appState,
-                false,
-            )
-        }
-    }
-
-
+    MovieScaffold(appState)
 }
 
 
 @Composable
 private fun MovieScaffold(
     appState: MovieAppState,
-    shouldShowBottomBar: Boolean,
+//    shouldShowNavRail: Boolean,
 ) {
     Scaffold(
         containerColor = Color.Transparent,
         contentColor = MaterialTheme.colorScheme.onBackground,
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             if (appState.shouldShowBottomBar) {
                 MovieBottomBar(
@@ -78,14 +77,8 @@ private fun MovieScaffold(
             Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .consumeWindowInsets(padding)
-                .windowInsetsPadding(
-                    WindowInsets.safeDrawing.only(
-                        WindowInsetsSides.Horizontal,
-                    ),
-                )
         ) {
-            if (!shouldShowBottomBar) {
+            if (appState.shouldShowNavRail) {
                 MovieNavRail(
                     destinations = appState.topLevelDestinations,
                     onNavigateToDestination = appState::navigateToTopLevelDestination,

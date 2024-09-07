@@ -1,6 +1,5 @@
 package ir.atefehtaheri.movieapp.feature.homescreen
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

@@ -16,10 +16,10 @@ class NetworkDetailItemDatasource @Inject constructor(
 ) : DetailItemDatasource {
 
 
-    override suspend fun getDetailMovie(movieid: Int): ResultStatus<MovieDetailDto> {
+    override suspend fun getDetailMovie(movieId: Int): ResultStatus<MovieDetailDto> {
         return withContext(dispatcher) {
             ensureActive()
-            when (val result = detailItemApi.getDetailMovie(movieid)) {
+            when (val result = detailItemApi.getDetailMovie(movieId)) {
                 is NetworkResponse.ApiError -> ResultStatus.Failure(result.body.status_message)
                 is NetworkResponse.NetworkError -> ResultStatus.Failure(
                     result.error.message ?: "NetworkError"
@@ -33,9 +33,9 @@ class NetworkDetailItemDatasource @Inject constructor(
         }
     }
 
-    override suspend fun getDetailTvShow(tvshowid: Int): ResultStatus<TvShowDetailDto> {
+    override suspend fun getDetailTvShow(tvshowId: Int): ResultStatus<TvShowDetailDto> {
         return withContext(dispatcher) {
-            when (val result = detailItemApi.getDetailTvShow(tvshowid)) {
+            when (val result = detailItemApi.getDetailTvShow(tvshowId)) {
                 is NetworkResponse.ApiError -> ResultStatus.Failure(result.body.status_message)
                 is NetworkResponse.NetworkError -> ResultStatus.Failure(
                     result.error.message ?: "NetworkError"

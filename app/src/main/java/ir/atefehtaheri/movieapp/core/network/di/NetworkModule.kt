@@ -49,13 +49,13 @@ fun provideRetrofit(
     baseUrl: String,
     networkResponseCallAdapterFactory: CallAdapter.Factory
 ): Retrofit {
-     val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
-    }
+//     val loggingInterceptor = HttpLoggingInterceptor().apply {
+//        level = HttpLoggingInterceptor.Level.BODY
+//    }
     val apiKey = BuildConfig.API_KEY
     val client = OkHttpClient.Builder()
         .addInterceptor(ApiKeyInterceptor(apiKey))
-        .addInterceptor(loggingInterceptor)
+//        .addInterceptor(loggingInterceptor)
         .build()
 
     return Retrofit.Builder()
